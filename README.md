@@ -6,7 +6,7 @@
 
 ## 素材引用元 ##
 
- ・効果音ラボ様
+ ・効果音ラボ様<br>
  URL:https://soundeffect-lab.info/sound/battle/
 
   ・Springin' Sound Stock様

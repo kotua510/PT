@@ -32,7 +32,7 @@ class Ball(pygame.sprite.Sprite):
     self.map = map
     self.status = Status.NOMAL
     self.vx = -4
-    self.life = 5 #100
+    self.life = 100
     self.born = True
     self.Width = 900
     self.margin = 100

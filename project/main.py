@@ -21,7 +21,7 @@ from opening import Opening
 #爆弾の問題は現状解決不可、いったんとったら爆弾を打てるitemを設置、スタートから飛び降りる形式にすることによって隠すことにする
 
 
-globals.bomb_counter = 150     
+globals.bomb_counter = 0     
 
 pygame.init()
 

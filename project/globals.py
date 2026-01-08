@@ -10,11 +10,11 @@ tile_y = 40
 
 enemy_kill = 0
 
-player_score = 30000
+player_score = 500
 
 player_coin = 0
 
-bomb_counter = 150
+bomb_counter = 0
 
 buy_flag = False
 hint_flag = False
@@ -28,7 +28,7 @@ debt = False
 h_counter_cur = 0
 
 
-knife_plus = 4
+knife_plus = 0
 
 out_camp = False
 restart = False

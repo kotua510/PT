@@ -219,7 +219,6 @@ class Boss(pygame.sprite.Sprite):
         if self.life <= 0:
           self.kill()
           self.live = False
-          print("okkkkkkkk")
           globals.enemy_kill += self.score_up
           self.dead = True
           pygame.mixer.music.stop()

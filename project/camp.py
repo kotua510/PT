@@ -446,7 +446,7 @@ class Camp(pygame.sprite.Sprite):
 
       if globals.out_camp == True:
           #if self.weapon_idx == 0:
-          print("ステージ1")
+          #print("ステージ1")
           #else:
 
           globals.out_camp = False

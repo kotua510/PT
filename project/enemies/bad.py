@@ -88,4 +88,3 @@ class Bad(pygame.sprite.Sprite):
 
       if self.rect.y >= 700:
           self.kill()
-          print("killed")

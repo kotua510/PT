@@ -10,7 +10,6 @@ pygame.init()
 
 
 class My_night(pygame.sprite.Sprite):
-  #歩行のアニメ―しょんの早さを調整
   anime_walk_index = [0,0,0,1,1,1]
 
 
@@ -78,8 +77,8 @@ class My_night(pygame.sprite.Sprite):
     self.rawrect = pygame.Rect(200, 200, 40, 40) 
     self.rect = self.rawrect
 
-    self.font = pygame.font.Font(None, 100)  # Noneはデフォルトフォント、36は文字サイズ
-    self.font_out = pygame.font.Font(None, 108)  # Noneはデフォルトフォント、36は文字サイズ
+    self.font = pygame.font.Font(None, 100)  
+    self.font_out = pygame.font.Font(None, 108)  
     self.over_text = self.font.render( "GAME OVER" , False, (255, 255, 255))
     self.over_text_out_rect = (220, 160)
     self.over_text_rect = (220, 160)
@@ -93,8 +92,8 @@ class My_night(pygame.sprite.Sprite):
     self.boss_lazer_group = boss_lazer_group
     self.damage = 0 
     self.invincible = False
-    self.invincible_start_time = 0  # 無敵が始まった時刻
-    self.invincible_duration = 1000  # 無敵時間（ミリ秒単位）＝1秒
+    self.invincible_start_time = 0 
+    self.invincible_duration = 1000
     self.deadflug = False
     self.inter_se = pygame.mixer.Sound("sound/camp/interact.mp3")
 
@@ -106,11 +105,11 @@ class My_night(pygame.sprite.Sprite):
   def right(self):
     if self.on_ground == True:
       if self.attck_bool == False:
-        self.rawrect.x +=5 #5
+        self.rawrect.x +=5 
         self.isleft = False
         self.walk_index += 1
     else:
-      self.rawrect.x +=5 #5
+      self.rawrect.x +=5 
       self.isleft = False
       self.walk_index += 5
     self.collision, self.line, self.sideline ,self.now_tile = self.map.check_collision(self.rawrect)
@@ -124,11 +123,11 @@ class My_night(pygame.sprite.Sprite):
   def left(self):
     if self.on_ground == True:
       if self.attck_bool == False:
-        self.rawrect.x -= 5 #5
+        self.rawrect.x -= 5
         self.isleft = True
         self.walk_index += 1
     else:
-      self.rawrect.x -= 5 #5
+      self.rawrect.x -= 5
       self.isleft = True
       self.walk_index += 1
     self.collision, self.line, self.sideline , self.now_tile = self.map.check_collision(self.rawrect)
@@ -142,7 +141,7 @@ class My_night(pygame.sprite.Sprite):
 
   def jump(self):
       if self.on_ground:
-        self.vy -= 18  #18
+        self.vy -= 18 
         self.on_ground = False
 
   def attck(self):
@@ -188,7 +187,7 @@ class My_night(pygame.sprite.Sprite):
     self.sound.play()
     pygame.display.update()
     time.sleep(8.5)
-    self.status = Status.DEAD  # ステータスをDEADに変更
+    self.status = Status.DEAD
 
   
 
@@ -201,8 +200,6 @@ class My_night(pygame.sprite.Sprite):
     self.sound.set_volume(0.3)
     self.check_x =self.rawrect.x // 40 
     self.check_y = self.rawrect.y // 40
-    #print(str(self.check_x) + " Xタイル")
-    #print(str(self.check_y) + " Yタイル")
     
     self.damage = 0
     self.time_limit = time_limit
@@ -399,7 +396,6 @@ class My_night(pygame.sprite.Sprite):
       else:
         self.image.set_alpha(255)
 
-      # self.rectを更新
       self.rect = pygame.Rect(self.map.get_drawx(self.rawrect), self.rawrect.y, self.rawrect.width, self.rawrect.height)
 
       if self.rawrect.x >= 13650 and not self.boss_BGM:

@@ -56,20 +56,15 @@ class Zombie(pygame.sprite.Sprite):
         self.sound.set_volume(1.0)
         
 
-        # ゾンビが画面内に見えるか判定
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
         else:
             self.visible = False
 
         if not self.visible:
-            return  # 表示範囲外なら動かさない
+            return  # 表示範囲外なら停止
 
-        # まずXだけ動かして、横の衝突判定
-        
-        #print(self.rawrect)
-        #print(self.on_ground)
-        self.vy += 1  # 重力加速度（下方向）
+        self.vy += 1
         
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
@@ -89,13 +84,12 @@ class Zombie(pygame.sprite.Sprite):
         else:
             self.on_ground = False
 
-        # 横の衝突判定
         self.rawrect.x += self.vx
         self.collision, self.line, self.sideline, self.now_tile = self.map.check_collision(self.rawrect)
         if self.collision:
             if self.isleft == False:
                 self.rawrect.x = (self.rawrect.x // 40 + 1) * 40
-                self.vx = -self.vx  # 壁で方向転換！
+                self.vx = -self.vx  
                 self.isleft = True
             else:
                 self.rawrect.x = (self.rawrect.x // 40) * 40
@@ -103,7 +97,6 @@ class Zombie(pygame.sprite.Sprite):
                 self.isleft = False
 
 
-        # 刃物や爆弾との衝突判定
         for knife in knife_group:
             if self.rawrect.colliderect(knife.rawrect):
                 knife.kill()

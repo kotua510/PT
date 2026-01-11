@@ -55,7 +55,7 @@ class Bad(pygame.sprite.Sprite):
         self.visible = False
 
       if not self.visible:
-        return  # 表示範囲外なら動かさない
+        return  # 表示範囲外なら停止
 
 
 

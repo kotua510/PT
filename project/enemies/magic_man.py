@@ -55,17 +55,15 @@ class Magic_man(pygame.sprite.Sprite):
 
         self.sound.set_volume(1.0)
 
-        # ゾンビが画面内に見えるか判定
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
         else:
             self.visible = False
 
         if not self.visible:
-            return  # 表示範囲外なら動かさない
+            return  # 表示範囲外なら停止
 
-        # まずXだけ動かして、横の衝突判定
-        self.vy += 1  # 重力加速度（下方向）
+        self.vy += 1  
         
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
@@ -84,8 +82,6 @@ class Magic_man(pygame.sprite.Sprite):
         else:
             self.on_ground = False
 
-
-        # 刃物や爆弾との衝突判定
         for knife in knife_group:
             if self.rawrect.colliderect(knife.rawrect):
                 knife.kill()

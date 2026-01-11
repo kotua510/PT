@@ -13,7 +13,6 @@ class Hud(pygame.sprite.Sprite, ):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
 
-    #爆弾、お宝取得状態など用の画像を引っ張る
     self.imgs = [
       pygame.image.load("image/HUD/hp_bar.png"),
       pygame.image.load("image/HUD/hp_memory.png"),
@@ -56,7 +55,7 @@ class Hud(pygame.sprite.Sprite, ):
     self.total_score_text_rect = pygame.Rect(510, 310, 150,150)
 
     self.font = pygame.font.SysFont("叛逆明朝",30)
-    self.score_font = pygame.font.SysFont("叛逆明朝",50) # Noneはデフォルトフォント、36は文字サイズ
+    self.score_font = pygame.font.SysFont("叛逆明朝",50)
     self.bomb_num = f"×{globals.bomb_counter}"
     self.bomb_text = self.font.render( self.bomb_num , False, (255, 255, 255))  # 白色の文字
     self.clock_counter = map_clock_counter
@@ -87,7 +86,7 @@ class Hud(pygame.sprite.Sprite, ):
     self.keep_time = globals.player_score
     self.last_time = 0
 
-    self.high_score = 600 #前のを次に気づくように変更する
+    self.high_score = 600
     self.now_time = 0
 
     self.wallno = False
@@ -123,7 +122,7 @@ class Hud(pygame.sprite.Sprite, ):
       self.treasure_get = map_treasure_get
       self.bomb_get = map_bomb_get
       self.bomb_num = f"×{globals.bomb_counter}"
-      self.bomb_text = self.font.render( self.bomb_num , False, (255, 255, 255))  # 白色の文字 
+      self.bomb_text = self.font.render( self.bomb_num , False, (255, 255, 255))
       self.clock_num = f"×{self.clock_counter}"
       self.clock_text = self.font.render(self.clock_num, False, (255, 255, 255) )
       self.current_time = pygame.time.get_ticks()
@@ -169,7 +168,7 @@ class Hud(pygame.sprite.Sprite, ):
     if self.treasure_get == True:
       win.blit(self.treasure_image, self.treasure_rect)
 
-    base_y = self.hp_memory_rect.y  # オリジナルのY座標を基準に
+    base_y = self.hp_memory_rect.y
     for i in range(self.life):
         temp_rect = self.hp_memory_rect.copy()
         temp_rect.y = base_y - (4 * i)
@@ -205,5 +204,4 @@ class Hud(pygame.sprite.Sprite, ):
         if self.first_camp == True:
           self.camp_BGM.set_volume(0.2)
           self.camp_BGM.play(-1)
-          #要注意
           self.first_camp = False

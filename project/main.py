@@ -151,7 +151,6 @@ def main():
 
         globals.window.fill((144, 215, 236))
         if night.status == Status.DEADING:
-        # DEADING中は描画処理をスキップ
           pygame.display.flip()
           continue
 
@@ -179,7 +178,7 @@ def main():
           magic_man_positions = [
     (4960,200),(5160, 160),(8400, 480),(9800,480),(10320,480),(10480,320),(10649,200)
     ]
-    
+
 
           for pos in bad_positions:
             bad = Bad((pos[0], pos[1], 40, 40), night, knife_rawrect, bomb_rawrect, map)
@@ -204,7 +203,6 @@ def main():
 
           pygame.display.flip()
           continue
-##############################################
 
         if night.status == Status.ROED:
           group, night, map, hud, camp = init()
@@ -266,7 +264,7 @@ def main():
             if attck_cooltime >= 0.15:
                 weapon_cooltime = False
 
-        if not weapon_cooltime:  # クールタイムが終わってたら攻撃できる
+        if not weapon_cooltime:
             if action[pygame.K_j]:
               if score_dis == False:
                 if len(globals.knife_group) < 3:

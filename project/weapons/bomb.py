@@ -25,10 +25,10 @@ class Bomb(pygame.sprite.Sprite):
 
       self.on_ground = False
       self.image = self.weapon_imgs[0] 
-      self.rect = self.image.get_rect()  # ← まずは自分の rect を作る
+      self.rect = self.image.get_rect()  #まずは自分のrectを作成
       self.rect.center = night_rect   
       self.rawrect = self.image.get_rect()
-      self.rawrect.center = night_rawrect_center  # ← その中心を night から渡された座標にする
+      self.rawrect.center = night_rawrect_center  # その中心をnightから渡された座標にする
       self.isleft = night_isleft
       self.bomb_vx = -9 if self.isleft else 9
       self.bomb_vy = -13
@@ -68,7 +68,7 @@ class Bomb(pygame.sprite.Sprite):
     
 
 
-    # 爆発エフェクトを追加（mapを渡す）
+    # 爆発エフェクトクラスで作成
         if self.wall_ec == False:
           explosion_group.add(Explosion((cx, cy), night_rect, self.map))  # 中心
           explosion_group.add(Explosion((cx - 20, cy), night_rect, self.map))  # 左
@@ -92,20 +92,19 @@ class Explosion(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.sound = pygame.mixer.Sound("sound/my/explosion.mp3")
-        self.map = map  # マップオブジェクトを保持
+        self.map = map  
         self.image = pygame.image.load("image/my/wepon/explosion.png")
         self.sound.set_volume(0.2)
         self.night_rect = night_rect
         self.rect = self.image.get_rect(center=bomb_rect)
         self.explosion_sound = True
-        self.life = 40  # 爆発エフェクトの寿命（フレーム数）
+        self.life = 40  # 爆発エフェクトの維持フレーム数
 
         # 初期位置を記録
         self.initial_x = self.rect.x
         self.initial_scroll_x = self.map.scroll_x  # 初期のスクロール量を記録
 
     def update(self):
-        # 爆発エフェクトの寿命を減らす
         self.life -= 1
         if self.explosion_sound:
             self.sound.play()

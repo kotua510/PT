@@ -120,7 +120,6 @@ class Map():
     self.treasure_up = 0
   
   def update_scroll(self, player_rect):
-        """プレイヤーの位置に基づいてスクロール量を更新"""
         if player_rect.x > self.nomove_X:
             self.scroll_x = player_rect.x - self.nomove_X
         else:
@@ -137,9 +136,6 @@ class Map():
           for j in range(15):
             self.data[i][362 + j] = 0
       
-      #self.data[][] = 
-        
-        #print("マップ変更" + str(i)) 
 
     self.rect_x, self.rect_y = rect_center
     self.xxidx = self.rect_x // 40
@@ -164,14 +160,14 @@ class Map():
       self.sound = self.mucs[1]
       self.sound.play()
       self.sound.set_volume(0.5)
-      return True  # ← ここで True を返す
-    return False  # ← ここでbomb_getじゃなかった場合のFalseもあるとGOOD
+      return True
+    return False
   
 
 
   def draw(self, win, rect):
-    tile_w = 40  # 1タイルの横サイズ（例：30や40）
-    tile_h = 40  # 1タイルの縦サイズ（例：30や40）
+    tile_w = 40
+    tile_h = 40  
 
     # スクロールの開始位置と余白
     if rect.x <= self.nomove_X:
@@ -182,8 +178,6 @@ class Map():
         margin = rect.x % tile_w
         self.drawmargin = -startx * tile_w - margin
 
-    # 表示するタイルの数を決める（画面の幅 / tile_w）
-    # 例として30個分表示したいなら：
     tiles_to_draw_x = 30
     tiles_to_draw_y = 20
 
@@ -193,7 +187,7 @@ class Map():
             if mapno > 0:
                 win.blit(self.imgs[mapno], ((x - startx) * tile_w - margin, y * tile_h))
 
-#ここから描画
+
     sister_screen_x = (16119 // tile_w - startx) * tile_w - margin
     sister_screen_y = 455
 

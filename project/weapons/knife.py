@@ -5,7 +5,7 @@ import math
 import random 
 from globals import Width
 
-class Knife(pygame.sprite.Sprite):#後でknifeにする
+class Knife(pygame.sprite.Sprite):
   def __init__(self,night_rect,night_isleft,map, night_rawrect_center):
     super().__init__()
     
@@ -18,7 +18,7 @@ class Knife(pygame.sprite.Sprite):#後でknifeにする
     ]
 
     self.image = self.weapon_imgs[2] 
-    self.rect = self.image.get_rect()  # ← まずは自分の rect を作る
+    self.rect = self.image.get_rect()  # まずは自分のrectを作る
     self.rect.center = night_rect
     self.rawrect = self.image.get_rect()
     self.rawrect.center = night_rawrect_center
@@ -48,10 +48,9 @@ class Knife(pygame.sprite.Sprite):#後でknifeにする
     # 描画用の座標に変換
     self.rect.x = self.rawrect.x - scroll_x
 
-    # 当たり判定はワールド座標の rawrect を使う！
     self.collision = self.map.check_collision_knife(self.rawrect)
 
-    if self.rect.left > Width or self.rect.left < 0:  # 画面の右端（例: 横幅800）
+    if self.rect.left > Width or self.rect.left < 0:
             self.kill()
     
     if self.collision == True:

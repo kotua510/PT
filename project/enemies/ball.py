@@ -61,19 +61,16 @@ class Ball(pygame.sprite.Sprite):
         self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
 
 
-        # ゾンビが画面内に見えるか判定
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
         else:
             self.visible = False
 
         if not self.visible:
-            return  # 表示範囲外なら動かさない
+            return  # 表示範囲外なら停止
 
-        # まずXだけ動かして、横の衝突判定
-        #print(self.rawrect)
-        #print(self.on_ground)
-        self.vy += 1  # 重力加速度（下方向）
+
+        self.vy += 1  
         
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
@@ -81,20 +78,15 @@ class Ball(pygame.sprite.Sprite):
         self.move_num += 1
         self.hitbox = self.rawrect.inflate(0, 0)
 
-        # 縦方向の当たり判定（地面に埋まらない版）
-        # 縦方向の当たり判定
-        # 移動前の位置を保存
         old_bottom = self.rawrect.bottom
 
-# 移動
         self.rawrect.y += self.vy
 
-# 当たり判定
         self.foot_collision, self.foot_line, self.foot_sideline, self.foot_now_tile = self.map.check_collision(self.foot_rawrect)
 
         if self.foot_collision or self.foot_line or self.foot_sideline:
           if self.vy > 0:
-        # 落下なら、移動前の bottom に戻して、ぴったり床に乗る
+
             self.rawrect.bottom = (old_bottom // 40) * 40
             self.on_ground = True
             self.vy = 0
@@ -107,13 +99,13 @@ class Ball(pygame.sprite.Sprite):
 
 
 
-        # 横の衝突判定
+
         self.rawrect.x += self.vx
         self.right_collision, self.right_line, self.right_sideline, self.right_now_tile = self.map.check_collision(self.left_rawrect)
         if self.right_collision:
             if self.isleft == False:
                 self.rawrect.x = (self.rawrect.x // 40 + 1) * 40
-                self.vx = -self.vx  # 壁で方向転換！
+                self.vx = -self.vx  # 壁で方向転換
                 self.isleft = True
         
 
@@ -124,7 +116,7 @@ class Ball(pygame.sprite.Sprite):
                 self.vx = -self.vx
                 self.isleft = False
 
-        # 刃物や爆弾との衝突判定
+        # 武器との衝突判定
         for knife in knife_group:
             if self.rawrect.colliderect(knife.rawrect):
                 knife.kill()

@@ -21,7 +21,7 @@ bomb_counter = 0
 buy_flag = False
 hint_flag = False
 
-keep_knife_idx = 0 #これと下グローバルに移動
+keep_knife_idx = 0 
 keep_debt_on = False
 hint_first = True
 debt_back = False

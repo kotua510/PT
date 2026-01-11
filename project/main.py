@@ -21,7 +21,7 @@ from opening import Opening
 #爆弾の問題は現状解決不可、いったんとったら爆弾を打てるitemを設置、スタートから飛び降りる形式にすることによって隠すことにする
 
 
-globals.bomb_counter = 0     
+
 
 pygame.init()
 
@@ -179,9 +179,7 @@ def main():
           magic_man_positions = [
     (4960,200),(5160, 160),(8400, 480),(9800,480),(10320,480),(10480,320),(10649,200)
     ]
-
-          boss = Boss((14280, 440, 80, 80), night, knife_rawrect, bomb_rawrect, map)
-          globals.boss_group.add(boss)
+    
 
           for pos in bad_positions:
             bad = Bad((pos[0], pos[1], 40, 40), night, knife_rawrect, bomb_rawrect, map)

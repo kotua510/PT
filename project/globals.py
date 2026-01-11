@@ -12,6 +12,8 @@ enemy_kill = 0
 
 player_score = 500
 
+boss_counter = 0
+
 player_coin = 0
 
 bomb_counter = 0

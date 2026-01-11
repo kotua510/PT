@@ -405,6 +405,6 @@ class My_night(pygame.sprite.Sprite):
       if self.rawrect.x >= 13650 and not self.boss_BGM:
           pygame.mixer.music.stop() 
           pygame.mixer.music.load(self.BGM[1])
-          pygame.mixer.music.set_volume(0.1)
+          pygame.mixer.music.set_volume(0.3)
           pygame.mixer.music.play(-1)
           self.boss_BGM = True

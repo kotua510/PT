@@ -17,8 +17,7 @@ from enemies.zombie import Zombie
 import globals
 from status import Status
 from opening import Opening
-#todo ,一回につき300+時計追加、150以下は禁止, 死んだときに敵をinit(), 自分を殺す,ボスへの爆弾のダメージを低下、bomb_counetを下げる
-#爆弾の問題は現状解決不可、いったんとったら爆弾を打てるitemを設置、スタートから飛び降りる形式にすることによって隠すことにする
+
 
 
 

@@ -23,14 +23,19 @@ class My_night(pygame.sprite.Sprite):
 
     self.BGM = ["sound/stage/stage_BGM.mp3",
                 "sound/enemy/boss_BGM.mp3",
+                "sound/camp/camp_BGM.mp3"
       ]
-    self.music = self.BGM[0]
+    if globals.deaded == True:
+      self.music = self.BGM[2]
+    else:
+      self.music = self.BGM[0]
     self.isleft = False
     self.anime_walk_index = [0,0,0,0,1,1,1,1]
     self.now_rect = []
     self.walk_index = 0
     self.on_ground = True
     self.wepon_draw = False
+    globals.player_deaded = False
     self.map = map
     self.vy = 0
     self.wepon_x = 0
@@ -73,8 +78,11 @@ class My_night(pygame.sprite.Sprite):
     self.image = self.night_imgs[0]
 
     self.sound = self.night_mucs[0]
-
-    self.rawrect = pygame.Rect(200, 200, 40, 40) 
+    
+    if globals.deaded == True:
+      self.rawrect = pygame.Rect(15050, 400, 40, 40) 
+    else:
+      self.rawrect = pygame.Rect(200, 200, 40, 40) 
     self.rect = self.rawrect
 
     self.font = pygame.font.Font(None, 100)  
@@ -398,7 +406,7 @@ class My_night(pygame.sprite.Sprite):
 
       self.rect = pygame.Rect(self.map.get_drawx(self.rawrect), self.rawrect.y, self.rawrect.width, self.rawrect.height)
 
-      if self.rawrect.x >= 13650 and not self.boss_BGM:
+      if self.rawrect.x >= 13650 and not self.boss_BGM and globals.deaded == False:
           pygame.mixer.music.stop() 
           pygame.mixer.music.load(self.BGM[1])
           pygame.mixer.music.set_volume(0.3)

@@ -154,11 +154,13 @@ def main():
           continue
 
         if night.status == Status.DEAD:
+          globals.deaded = True
           globals.player_score = hud.keep_time
           globals.player_coin = map.keep_coin
           globals.bomb_counter = keep_bomb
           group, night, map, hud, camp = init()
           keep_bomb = globals.bomb_counter
+          globals.player_deaded = True
 
           bad_positions = [
     (1400, 330),(1460, 330),(2010,400),(2270,350),(2250,380),(2290,320),(4260,180),(4300,140),(4340,220),
@@ -204,6 +206,7 @@ def main():
           continue
 
         if night.status == Status.ROED:
+          globals.deaded = False
           group, night, map, hud, camp = init()
           globals.player_coin = 0
           

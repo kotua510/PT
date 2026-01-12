@@ -91,6 +91,7 @@ class Hud(pygame.sprite.Sprite, ):
 
     self.wallno = False
     self.score = 0
+    self.limit_time = 0
 
     self.score_dis = False
     self.first_score = True
@@ -126,16 +127,19 @@ class Hud(pygame.sprite.Sprite, ):
       self.clock_num = f"×{self.clock_counter}"
       self.clock_text = self.font.render(self.clock_num, False, (255, 255, 255) )
       self.current_time = pygame.time.get_ticks()
-      self.limit_time = (self.current_time - self.base_time) / 1000  # 経過時間（秒）
-      self.limit_time = int(self.limit_time)
       if self.boss_dead:
         self.now_time = self.limit_time
+        self.now_time = 550 - self.now_time
       else:
+        if globals.player_deaded == False:
+          self.limit_time = (self.current_time - self.base_time) / 1000  # 経過時間（秒）
+        self.limit_time = int(self.limit_time)
         if self.limit_time != self.last_time:
           self.last_time = self.limit_time
           if globals.player_score > 0:
-            globals.player_score -= 1
-            self.time_spemd += 1
+            if globals.player_deaded == False:
+              globals.player_score -= 1
+              self.time_spemd += 1
           else:
             globals.player_score = 0
 
@@ -152,9 +156,9 @@ class Hud(pygame.sprite.Sprite, ):
 
     self.coin_text = self.score_font.render(str(self.coins), False, (255, 255, 255))
     self.enemy_int_text = self.score_font.render(str(globals.enemy_kill), False, (255, 255, 255))
-    self.total_int = int(globals.enemy_kill) + int(self.coins) + int(self.time_score_base - self.time_spemd)
+    self.total_int = int(globals.enemy_kill) + int(self.coins) + int(self.now_time)
     self.total_int_text = self.score_font.render(str(self.total_int), False, (255, 255, 255))
-    self.time_int_text = self.score_font.render(str(self.time_score_base - self.time_spemd), False, (255, 255, 255))
+    self.time_int_text = self.score_font.render(str(self.now_time), False, (255, 255, 255))
     self.time_str_text = self.score_font.render("TIME", False, (255, 255, 255))
 
     win.blit(self.hp_bar_image, self.hp_bar_rect)
@@ -176,7 +180,7 @@ class Hud(pygame.sprite.Sprite, ):
     
     if self.boss_dead == True:
       if self.score_up == True:
-        globals.player_score += globals.enemy_kill + globals.player_coin + (self.time_score_base - self.time_spemd)
+        globals.player_score += globals.enemy_kill + globals.player_coin + int(self.now_time)
         self.score_up = False
 
       

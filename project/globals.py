@@ -12,6 +12,8 @@ enemy_kill = 0
 
 player_score = 500
 
+player_deaded = False
+
 boss_counter = 0
 
 player_coin = 0
@@ -28,6 +30,8 @@ debt_back = False
 debt = False
 
 h_counter_cur = 0
+
+deaded = False
 
 
 knife_plus = 0

@@ -87,7 +87,8 @@ class Camp(pygame.sprite.Sprite):
     self.SEs = [
       pygame.mixer.Sound("sound/camp/cursor_move.mp3"),
       pygame.mixer.Sound("sound/camp/interact.mp3"),
-      pygame.mixer.Sound("sound/camp/text.mp3")
+      pygame.mixer.Sound("sound/camp/text.mp3"),
+      pygame.mixer.Sound("sound/camp/not_inter.mp3")
     ]
 
     self.treasure_hint = [
@@ -98,7 +99,7 @@ class Camp(pygame.sprite.Sprite):
     ]
 
     self.debt_text = [
-      "時間を借りるのですね。 あなたに貸すことのできる時間は 500 です。",
+      "時間を借りるのですね。 あなたに貸すことのできる時間は 800 です。",
       "返す時は+200の時間を返さなければなりません、時間を借りている間は",
       "武器の購入や強化はできません。 それでも借りるのですか? ",
       "借りるのでしたら Lキー を押して下さい"
@@ -193,28 +194,56 @@ class Camp(pygame.sprite.Sprite):
         if self.debt_on == False:
           if self.weapon_idx == 0:
             if self.knife_idx != 4:
-              self.SEs[1].play()
               if self.knife_idx == 0:
                 globals.player_score -= 600
-                globals.knife_plus += 0.5
-                self.SEs[1].play()
+                if globals.player_score < 0:
+                  globals.player_score += 600
+                  self.SEs[3].play()
+                else:
+                  globals.knife_plus += 0.5
+                  self.SEs[1].play()
+                  self.knife_idx += 1
+
               elif self.knife_idx == 1:
                 globals.player_score -= 1500
-                globals.knife_plus += 0.5
+                if globals.player_score < 0:
+                  globals.player_score += 1500
+                  self.SEs[3].play()
+                else:
+                  globals.knife_plus += 0.5
+                  self.SEs[1].play()
+                  self.knife_idx += 1
+
               elif self.knife_idx == 2:
                 globals.player_score -= 3500
-                globals.knife_plus += 1
+                if globals.player_score < 0:
+                  globals.player_score += 3500
+                  self.SEs[3].play()
+                else:
+                  globals.knife_plus += 1
+                  self.SEs[1].play()
+                  self.knife_idx += 1
+
               elif self.knife_idx == 3:
                 globals.player_score -= 10000
-                globals.knife_plus += 2
-              self.knife_idx += 1
+                if globals.player_score < 0:
+                  globals.player_score += 10000
+                  self.SEs[3].play()
+                else:
+                  globals.knife_plus += 2
+                  self.SEs[1].play()
+                  self.knife_idx += 1
 
 
           else:
-            globals.bomb_counter += 1
             globals.player_score -= 100
-            self.SEs[1].play()
-            self.SEs[1].set_volume(1.0)
+            if globals.player_score < 0:
+                  globals.player_score += 100
+                  self.SEs[3].play()
+            else:
+                  globals.bomb_counter += 1
+                  self.SEs[1].play()
+                  self.SEs[1].set_volume(1.0)
           globals.buy_flag = False
 
 
@@ -336,9 +365,9 @@ class Camp(pygame.sprite.Sprite):
         self.plece_text1 = self.font.render(self.weapon_plecetexts[0], False, self.white)
         self.plece_text2 = self.font.render(self.weapon_plecetexts[1], False, self.yellow)
 
+      pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
+      pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
       if globals.hint_flag == False:
-        pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
-        pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
         globals.window.blit(self.human_text1,(10,20,150,150))
         globals.window.blit(self.human_text2,(10,60,150,150))
         globals.window.blit(self.human_text3,(10,100,150,150))
@@ -363,14 +392,20 @@ class Camp(pygame.sprite.Sprite):
         if self.weapon_idx == 0:
           if self.hint_first == True:
             globals.player_score -= 2000
-            pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
-            pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
+            if globals.player_score < 0:
+                  globals.player_score += 2000
+                  self.SEs[3].play()
+                  globals.hint_flag = False
+            else:
+                  self.SEs[1].play()
+                  pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
+                  pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
             
-            globals.window.blit(self.hint_text1,(10,20,150,150))
-            globals.window.blit(self.hint_text2,(10,60,150,150))
-            globals.window.blit(self.hint_text3,(10,100,150,150))
-            globals.window.blit(self.hint_text4,(10,100,150,150))
-            self.hint_first = False
+                  globals.window.blit(self.hint_text1,(10,20,150,150))
+                  globals.window.blit(self.hint_text2,(10,60,150,150))
+                  globals.window.blit(self.hint_text3,(10,100,150,150))
+                  globals.window.blit(self.hint_text4,(10,100,150,150))
+                  self.hint_first = False
           else:
             pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
             pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
@@ -395,7 +430,7 @@ class Camp(pygame.sprite.Sprite):
             if self.key[pygame.K_l] and not self.prev_l:
               if self.debt_on == False:
                 self.SEs[1].play()
-                globals.player_score += 500
+                globals.player_score += 800
               self.debt_on = True
               self.debt_back = False
             self.prev_l = self.key[pygame.K_l]
@@ -416,7 +451,7 @@ class Camp(pygame.sprite.Sprite):
             if self.key[pygame.K_l] and not self.prev_l:
               if self.debt_on == True:
                 self.SEs[1].play()
-                globals.player_score -= 700
+                globals.player_score -= 1000
               self.debt_on = False
               self.debt_back = True
             self.prev_l = self.key[pygame.K_l]

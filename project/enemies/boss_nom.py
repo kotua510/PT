@@ -9,7 +9,7 @@ import globals
 pygame.init()
 
 
-class Boss(pygame.sprite.Sprite):
+class Boss_nom(pygame.sprite.Sprite):
   def  __init__(self, boss_rawrect,night,knife_rawrect,exc_rawrect,map):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
@@ -37,7 +37,7 @@ class Boss(pygame.sprite.Sprite):
     self.map = map
     self.status = Status.NOMAL
     self.vx = -4
-    self.life = 120
+    self.life = 200
     self.born = True
     self.Width = 900
     self.margin = 100
@@ -57,7 +57,7 @@ class Boss(pygame.sprite.Sprite):
     self.dead = False
     self.win_se = pygame.mixer.Sound("sound/stage/win_BGM.mp3")
     self.boss_dead_se = pygame.mixer.Sound("sound/enemy/boss_dead.mp3")
-    self.score_up = 200
+    self.score_up = 100
     self.live = True
 
 
@@ -149,7 +149,7 @@ class Boss(pygame.sprite.Sprite):
                 self.trun_limit_time = self.nowtime
 
 
-        if 13750 < self.rawrect.x < 14000:
+        if 2400 < self.rawrect.x < 3320:
           self.trun_right = True
         else:
           self.trun_right = False
@@ -212,26 +212,23 @@ class Boss(pygame.sprite.Sprite):
               self.attck = True
               self.sound = self.sous[1]
               self.sound.play()
-              boss_lazer = Boss_lazer(self.rawrect,self.rect, self.night_rawrect, self.map)
-              globals.boss_lazer_group.add(boss_lazer)
+              boss_lazer_nom = Boss_lazer_nom(self.rawrect,self.rect, self.night_rawrect, self.map)
+              globals.boss_lazer_nom_group.add(boss_lazer_nom)
 
 
         if self.life <= 0:
-          self.kill()
           self.live = False
           globals.enemy_kill += self.score_up
-          self.dead = True
-          pygame.mixer.music.stop()
           self.boss_dead_se.set_volume(1.0)
           self.boss_dead_se.play()
-          time.sleep(2.5)
-          self.win_se.play()
+          globals.boss_nom_dead = True
+          self.kill()
 
 
         if self.rect.y >= 700:
           self.kill()
 
-class Boss_lazer(pygame.sprite.Sprite):
+class Boss_lazer_nom(pygame.sprite.Sprite):
   def __init__(self, boss_rawrect, boss_rect, night_rawrect, map):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
@@ -266,7 +263,7 @@ class Boss_lazer(pygame.sprite.Sprite):
 
   def update(self,night_status,boss_live):
 
-    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET or boss_live == False:
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or boss_live == False or night_status == Status.END or night_status == Status.RESET:
       self.kill()
 
     if self.vx >= 0:
@@ -281,3 +278,4 @@ class Boss_lazer(pygame.sprite.Sprite):
 
     self.rect.x = self.rawrect.x - self.map.scroll_x
     self.rect.y = self.rawrect.y
+

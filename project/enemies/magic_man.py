@@ -41,7 +41,7 @@ class Magic_man(pygame.sprite.Sprite):
 
   def update(self, knife_group, bomb_group,night_status):
 
-    if night_status == Status.DEADING or night_status == Status.DEAD:
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.END or night_status == Status.RESET:
       self.kill()
 
     if self.status == Status.NOMAL:
@@ -87,7 +87,7 @@ class Magic_man(pygame.sprite.Sprite):
                 knife.kill()
                 self.sound.play()
                 if self.life > 0:
-                    self.life -= (1 + globals.knife_plus)
+                    self.life -= (1 + globals.knife_plus + globals.treasure_knife)
 
                 if self.life <= 0:
                     globals.enemy_kill += self.score_up
@@ -116,9 +116,6 @@ class Magic_man(pygame.sprite.Sprite):
         if self.rect.x + self.margin <= 0:
             self.kill()
 
-        if self.rect.y >= 700:
-          self.kill()
-
 
 class Magic_ball(pygame.sprite.Sprite):
   def __init__(self, magic_man_rawrect, magic_man_rect, night_rawrect, map):
@@ -138,7 +135,7 @@ class Magic_ball(pygame.sprite.Sprite):
     self.life = pygame.time.get_ticks()
 
   def update(self,night_status):
-    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED  :
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
       self.kill()
     self.time = pygame.time.get_ticks()
     self.limit_time = (self.time - self.life) / 1000

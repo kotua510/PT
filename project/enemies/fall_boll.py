@@ -8,8 +8,8 @@ import globals
 
 pygame.init()
 
-class Ball(pygame.sprite.Sprite):
-  def  __init__(self, ball_rawrect,night,knife_rawrect,exc_rawrect,map):
+class Fall_Ball(pygame.sprite.Sprite):
+  def  __init__(self, fall_ball_rawrect,night,knife_rawrect,exc_rawrect,map):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
 
@@ -24,7 +24,8 @@ class Ball(pygame.sprite.Sprite):
     self.sound = pygame.mixer.Sound("sound/enemy/enemy_hit.mp3")
     self.move_index = [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3]
     self.move_num = 0
-    self.rawrect = pygame.Rect(ball_rawrect)
+    self.rawrect = pygame.Rect(fall_ball_rawrect)
+    self.rawrect_origin = self.rawrect.copy()
     self.rect = self.rawrect.copy()
     self.night_rawrect = night.rawrect
     self.knife_rawrect = knife_rawrect
@@ -41,9 +42,10 @@ class Ball(pygame.sprite.Sprite):
     self.visible = False
     self.isleft = False
     self.score_up = 100
+    self.vyadd = 0
 
 
-  def update(self, knife_group, bomb_group,night_status):
+  def update(self, knife_group,bomb_group,night_status):
 
     if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
       self.kill()
@@ -70,7 +72,10 @@ class Ball(pygame.sprite.Sprite):
             return  # 表示範囲外なら停止
 
 
-        self.vy += 1  
+        self.vyadd += 1
+        if self.vyadd >= 3:
+          self.vy += 1
+          self.vyadd = 0
         
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
@@ -81,40 +86,8 @@ class Ball(pygame.sprite.Sprite):
         old_bottom = self.rawrect.bottom
 
         self.rawrect.y += self.vy
+        self.rect.y = self.rawrect.y
 
-        self.foot_collision, self.foot_line, self.foot_sideline, self.foot_now_tile = self.map.check_collision(self.foot_rawrect)
-
-        if self.foot_collision or self.foot_line or self.foot_sideline:
-          if self.vy > 0:
-
-            self.rawrect.bottom = (old_bottom // 40) * 40
-            self.on_ground = True
-            self.vy = 0
-          else:
-            self.rawrect.top = (self.rawrect.top // 40 + 1) * 40
-            self.vy = 1
-        else:
-          self.on_ground = False
-
-
-
-
-
-        self.rawrect.x += self.vx
-        self.right_collision, self.right_line, self.right_sideline, self.right_now_tile = self.map.check_collision(self.left_rawrect)
-        if self.right_collision:
-            if self.isleft == False:
-                self.rawrect.x = (self.rawrect.x // 40 + 1) * 40
-                self.vx = -self.vx  # 壁で方向転換
-                self.isleft = True
-        
-
-        self.left_collision, self.left_line, self.left_sideline, self.left_now_tile = self.map.check_collision(self.right_rawrect)
-        if self.left_collision:
-            if self.isleft == True:
-                self.rawrect.x = (self.rawrect.x // 40) * 40
-                self.vx = -self.vx
-                self.isleft = False
 
         # 武器との衝突判定
         for knife in knife_group:
@@ -128,9 +101,8 @@ class Ball(pygame.sprite.Sprite):
                     self.kill()
 
 
-        # 画面外に出たら削除
-        if self.rect.x + self.margin <= 0:
-            self.kill()
 
         if self.rect.y >= 700:
-          self.kill()
+          self.rawrect = self.rawrect_origin.copy()
+          self.rect = self.rawrect.copy()
+          self.vy = 0

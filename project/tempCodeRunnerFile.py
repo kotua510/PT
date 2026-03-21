@@ -1,1 +1,1 @@
-print
+boss.dead

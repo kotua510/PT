@@ -38,7 +38,7 @@ class Bad(pygame.sprite.Sprite):
 
   def update(self, knife_group, bomb_group,night_status):
 
-    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED  :
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET:
       self.kill()
 
     if self.status == Status.NOMAL:
@@ -71,7 +71,7 @@ class Bad(pygame.sprite.Sprite):
           knife.kill()
           self.sound.play()
           if self.life > 0:
-                    self.life -= (1 + globals.knife_plus)
+                    self.life -= (1 + globals.knife_plus + globals.treasure_knife)
 
           if self.life <= 0:
                     globals.enemy_kill += self.score_up

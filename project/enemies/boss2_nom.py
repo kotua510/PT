@@ -5,23 +5,24 @@ import math
 import random 
 from status import Status
 import globals
+import map
 
 pygame.init()
 
 
-class Boss(pygame.sprite.Sprite):
+class Boss2_nom(pygame.sprite.Sprite):
   def  __init__(self, boss_rawrect,night,knife_rawrect,exc_rawrect,map):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
 
     self.imgs = [
-      pygame.image.load("image/stage/enemy/boss1_1.png"),
-      pygame.image.load("image/stage/enemy/boss1_2.png"),
+      pygame.image.load("image/stage/enemy/boss2_1.png"),
+      pygame.image.load("image/stage/enemy/boss2_2.png"),
     ]
 
     self.sous = [
       pygame.mixer.Sound("sound/enemy/enemy_hit.mp3"),
-      pygame.mixer.Sound("sound/enemy/boss_attck.mp3")
+      pygame.mixer.Sound("sound/enemy/boss2_attck.mp3")
     ]
 
     self.image = self.imgs[0]
@@ -37,7 +38,7 @@ class Boss(pygame.sprite.Sprite):
     self.map = map
     self.status = Status.NOMAL
     self.vx = -4
-    self.life = 120
+    self.life = 150
     self.born = True
     self.Width = 900
     self.margin = 100
@@ -57,7 +58,7 @@ class Boss(pygame.sprite.Sprite):
     self.dead = False
     self.win_se = pygame.mixer.Sound("sound/stage/win_BGM.mp3")
     self.boss_dead_se = pygame.mixer.Sound("sound/enemy/boss_dead.mp3")
-    self.score_up = 200
+    self.score_up = 150
     self.live = True
 
 
@@ -149,7 +150,7 @@ class Boss(pygame.sprite.Sprite):
                 self.trun_limit_time = self.nowtime
 
 
-        if 13750 < self.rawrect.x < 14000:
+        if 5920 < self.rawrect.x < 6720:
           self.trun_right = True
         else:
           self.trun_right = False
@@ -212,72 +213,201 @@ class Boss(pygame.sprite.Sprite):
               self.attck = True
               self.sound = self.sous[1]
               self.sound.play()
-              boss_lazer = Boss_lazer(self.rawrect,self.rect, self.night_rawrect, self.map)
-              globals.boss_lazer_group.add(boss_lazer)
+              boss_ball_night_nom = Boss_ball_night_nom(self.night_rawrect,self.map)
+              boss_ball_ran_nom = Boss_ball_ran_nom(self.map)
+              globals.boss_ball_night_nom_group.add(boss_ball_night_nom)
+              globals.boss_ball_ran_nom_group.add(boss_ball_ran_nom)
 
 
         if self.life <= 0:
           self.kill()
-          self.live = False
           globals.enemy_kill += self.score_up
-          self.dead = True
-          pygame.mixer.music.stop()
           self.boss_dead_se.set_volume(1.0)
           self.boss_dead_se.play()
-          time.sleep(2.5)
-          self.win_se.play()
+          globals.boss_nom2_dead = True
+          self.kill()
 
 
         if self.rect.y >= 700:
           self.kill()
 
-class Boss_lazer(pygame.sprite.Sprite):
-  def __init__(self, boss_rawrect, boss_rect, night_rawrect, map):
+class Boss_ball_night_nom(pygame.sprite.Sprite):
+  def  __init__(self,night_rawrect,map):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
 
-    self.image = pygame.image.load("image/stage/enemy/boss_attck.png")
-    self.trans_image = self.image
-    self.margin = 100
-    self.boss_rect = boss_rect
-    self.boss_rawrect = boss_rawrect
-    self.rect = self.boss_rect.copy()
-    self.rawrect = self.boss_rawrect.copy()
-    self.night_rawrect = night_rawrect
-    self.width = 900
+    self.imgs = [
+      pygame.image.load("image/stage/enemy/ball1.png"),
+      pygame.image.load("image/stage/enemy/ball2.png"),
+      pygame.image.load("image/stage/enemy/ball3.png"),
+      pygame.image.load("image/stage/enemy/ball4.png"),
+    ]
+
+    self.image = self.imgs[0]
+    self.sound = pygame.mixer.Sound("sound/enemy/enemy_hit.mp3")
+    self.move_index = [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3]
+    self.move_num = 0
+    self.night_rawrect = night_rawrect.copy()
+    self.rawrect = pygame.Rect(self.night_rawrect.x,50,80,80)
+    self.rect = self.rawrect.copy()
     self.map = map
-    
+    self.status = Status.NOMAL
+    self.vx = -4
+    self.life = 120
+    self.born = True
+    self.Width = 900
+    self.margin = 100
+    self.vy = 0
+    self.on_ground = False
+    self.visible = False
+    self.isleft = False
+    self.score_up = 100
+    self.vyadd = 0
 
 
+  def update(self, knife_group,night_status):
 
-    target_x = self.night_rawrect.centerx
-    target_y = self.night_rawrect.centery
-
-    self.dx = target_x - self.rawrect.centerx
-    self.dy = target_y - self.rawrect.centery
-
-    distance = math.hypot(self.dx, self.dy)
-
-    if distance == 0:
-      distance = 1
-    
-    self.vx = (self.dx / distance) * 7
-    self.vy = (self.dy / distance) * 7
-
-  def update(self,night_status,boss_live):
-
-    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET or boss_live == False:
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
       self.kill()
 
-    if self.vx >= 0:
-      self.isleft = True
-    else:
-      self.isleft = False
+    if self.status == Status.NOMAL:
 
-    self.image = pygame.transform.flip(self.trans_image, self.isleft, False)
 
-    self.rawrect.x += self.vx
-    self.rawrect.y += self.vy
+        self.scroll_x = self.map.scroll_x
 
-    self.rect.x = self.rawrect.x - self.map.scroll_x
-    self.rect.y = self.rawrect.y
+
+        self.foot_rawrect = pygame.Rect(self.rawrect.x, self.rawrect.bottom, self.rawrect.width, 1)
+        self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
+        self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
+
+
+        if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
+            self.visible = True
+        else:
+            self.visible = False
+
+        if not self.visible:
+            return  # 表示範囲外なら停止
+
+
+        self.vyadd += 1
+        if self.vyadd >= 2:
+          self.vy += 1
+          self.vyadd = 0
+        
+        self.rect.x = self.rawrect.x - self.scroll_x
+        self.rect.y = self.rawrect.y
+        self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 40]], self.isleft, False)
+        self.move_num += 1
+        self.hitbox = self.rawrect.inflate(0, 0)
+
+        old_bottom = self.rawrect.bottom
+
+        self.rawrect.y += self.vy
+        self.rect.y = self.rawrect.y
+
+
+        # 武器との衝突判定
+        for knife in knife_group:
+            if self.rawrect.colliderect(knife.rawrect):
+                knife.kill()
+                if self.life > 0:
+                    self.life -= (1 + globals.knife_plus)
+
+                if self.life <= 0:
+                    globals.enemy_kill += self.score_up
+                    self.kill()
+
+
+        if self.rect.y >= 700:
+          self.kill()
+
+class Boss_ball_ran_nom(pygame.sprite.Sprite):
+  def  __init__(self,map):
+    super().__init__()
+    pygame.sprite.Sprite.__init__(self)
+
+    self.imgs = [
+      pygame.image.load("image/stage/enemy/ball1.png"),
+      pygame.image.load("image/stage/enemy/ball2.png"),
+      pygame.image.load("image/stage/enemy/ball3.png"),
+      pygame.image.load("image/stage/enemy/ball4.png"),
+    ]
+
+    self.image = self.imgs[0]
+    self.sound = pygame.mixer.Sound("sound/enemy/enemy_hit.mp3")
+    self.move_index = [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3]
+    self.move_num = 0
+    self.rawrect_x = random.randint(5920,6720)
+    self.rawrect = pygame.Rect(self.rawrect_x,50,80,80)
+    self.rect = self.rawrect.copy()
+    self.map = map
+    self.status = Status.NOMAL
+    self.vx = -4
+    self.life = 100
+    self.born = True
+    self.Width = 900
+    self.margin = 100
+    self.vy = 0
+    self.on_ground = False
+    self.visible = False
+    self.isleft = False
+    self.score_up = 200
+    self.vyadd = 0
+
+
+  def update(self, knife_group,night_status):
+
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
+      self.kill()
+
+    if self.status == Status.NOMAL:
+
+
+        self.scroll_x = self.map.scroll_x
+
+
+        self.foot_rawrect = pygame.Rect(self.rawrect.x, self.rawrect.bottom, self.rawrect.width, 1)
+        self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
+        self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
+
+
+        if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
+            self.visible = True
+        else:
+            self.visible = False
+
+        if not self.visible:
+            return  # 表示範囲外なら停止
+
+
+        self.vyadd += 1
+        if self.vyadd >= 2:
+          self.vy += 1
+          self.vyadd = 0
+        
+        self.rect.x = self.rawrect.x - self.scroll_x
+        self.rect.y = self.rawrect.y
+        self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 40]], self.isleft, False)
+        self.move_num += 1
+        self.hitbox = self.rawrect.inflate(0, 0)
+
+        old_bottom = self.rawrect.bottom
+
+        self.rawrect.y += self.vy
+        self.rect.y = self.rawrect.y
+
+
+        # 武器との衝突判定
+        for knife in knife_group:
+            if self.rawrect.colliderect(knife.rawrect):
+                knife.kill()
+                if self.life > 0:
+                    self.life -= (1 + globals.knife_plus)
+
+                if self.life <= 0:
+                    globals.enemy_kill += self.score_up
+                    self.kill()
+
+        if self.rect.y >= 700:
+          self.kill()

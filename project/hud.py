@@ -9,7 +9,7 @@ from status import Status
 pygame.init()
 
 class Hud(pygame.sprite.Sprite, ):
-  def __init__(self, map_clock_counter, map_treasure_get, map_bomb_get):
+  def __init__(self, map_clock_counter, map_bomb_get):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
 
@@ -21,6 +21,7 @@ class Hud(pygame.sprite.Sprite, ):
       pygame.image.load("image/stage/gimmick/clock.png"),
       pygame.image.load("image/stage/gimmick/treasure.png"),
       pygame.image.load("image/my/wepon/bomb_no.png"),
+      pygame.image.load("image/my/wepon/knife.png"),
     ]
     globals.bomb_counter
 
@@ -29,10 +30,10 @@ class Hud(pygame.sprite.Sprite, ):
     self.time_frame_image = self.imgs[2]
     self.weapon_image = self.imgs[6]
     self.clock_image = self.imgs[4]
-    self.treasure_image = self.imgs[5]
-    self.treasure_get = map_treasure_get
+    self.treasure_image1 = self.imgs[5]
+    self.treasure_image2 = self.imgs[7]
     self.bomb_get = map_bomb_get
-    self.life = 38  
+    self.life =38  
 
     self.hp_bar_rect = pygame.Rect(-30, 20, 150, 150)
     self.hp_memory_rect = pygame.Rect(-30, 20, 150, 150)
@@ -40,7 +41,8 @@ class Hud(pygame.sprite.Sprite, ):
     self.weapon_text_rect = pygame.Rect(98, 35, 150, 150)
     self.clock_rect = pygame.Rect(60, 65, 150, 150)
     self.clock_text_rect = pygame.Rect(98, 78, 150, 150)
-    self.treasure_rect = pygame.Rect(63, 110, 150, 150)
+    self.treasure_rect1 = pygame.Rect(63, 110, 150, 150)
+    self.treasure_rect2 = pygame.Rect(63, 160, 150, 150)
     self.time_rect = pygame.Rect(780, 0, 150, 150)
     self.time_text_rect = pygame.Rect(807, 42, 150, 150)
 
@@ -93,7 +95,6 @@ class Hud(pygame.sprite.Sprite, ):
     self.score = 0
     self.limit_time = 0
 
-    self.score_dis = False
     self.first_score = True
 
     self.first_camp = True
@@ -104,9 +105,11 @@ class Hud(pygame.sprite.Sprite, ):
     self.deadflug = False
 
 
-  def update(self,map_clock_counter, map_treasure_get, map_bomb_get, night_damage,boss_dead, treasure_up,night_status):
-    if night_status == Status.ROED:
+  def update(self,map_clock_counter, map_bomb_get, night_damage,boss_dead,night_status):
+    if night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET:
       self.camp_BGM.stop()
+      if night_status == Status.END:
+        self.keep_time = globals.player_score
 
     if night_status == Status.NOMAL:
       if (self.life <= 0):
@@ -114,13 +117,12 @@ class Hud(pygame.sprite.Sprite, ):
       self.boss_dead = boss_dead
       self.score = globals.player_score
       self.coins = globals.player_coin
-      self.life = self.life - night_damage + treasure_up
+      self.life = self.life - night_damage + globals.treasure_up
       night_damage = 0
-      treasure_up = 0
+      globals.treasure_up = 0
       if self.bomb_get == True:
         self.weapon_image = self.imgs[3]
       self.clock_counter = map_clock_counter
-      self.treasure_get = map_treasure_get
       self.bomb_get = map_bomb_get
       self.bomb_num = f"×{globals.bomb_counter}"
       self.bomb_text = self.font.render( self.bomb_num , False, (255, 255, 255))
@@ -169,8 +171,10 @@ class Hud(pygame.sprite.Sprite, ):
     win.blit(self.time_text, self.time_text_rect)
     win.blit(self.clock_image, self.clock_rect)
     win.blit(self.clock_text, self.clock_text_rect)
-    if self.treasure_get == True:
-      win.blit(self.treasure_image, self.treasure_rect)
+    if globals.treasure_get1 == True:
+      win.blit(self.treasure_image1, self.treasure_rect1)
+    if globals.treasure_get2 == True:
+      win.blit(self.treasure_image2, self.treasure_rect2)
 
     base_y = self.hp_memory_rect.y
     for i in range(self.life):
@@ -187,8 +191,8 @@ class Hud(pygame.sprite.Sprite, ):
       if self.first_score == True:
         self.score_start_time = pygame.time.get_ticks()
         self.first_score = False
-        self.score_dis = True
-      if self.score_dis == True:
+        globals.score_dis = True
+      if globals.score_dis == True:
         win.blit(self.enemy_str_text, self.enemy_text_rect)
         win.blit(self.enemy_int_text, self.enemy_score_text_rect)
         win.blit(self.coin_str_text, self.coin_score_rect)
@@ -204,7 +208,7 @@ class Hud(pygame.sprite.Sprite, ):
       self.score_spend_time = (self.score_current_time - self.score_start_time)  # 経過時間（秒）
       self.score_spend_time = int(self.score_spend_time)
       if self.score_spend_time >= 16800:
-        self.score_dis = False
+        globals.score_dis = False
         if self.first_camp == True:
           self.camp_BGM.set_volume(0.2)
           self.camp_BGM.play(-1)

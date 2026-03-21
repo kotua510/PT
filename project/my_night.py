@@ -14,7 +14,7 @@ class My_night(pygame.sprite.Sprite):
 
 
 
-  def __init__(self,map,window,time_limit,bad_group, zombie_group, ball_group,magic_man_group, magic_ball_group, boss_group,boss_lazer_group):
+  def __init__(self,map,window,time_limit,bad_group, zombie_group, ball_group,fall_ball_group,magic_man_group, magic_ball_group, boss_group,boss_lazer_group, boss_ball_night_group, boss_ball_ran_group, boss_nom_group,boss_lazer_nom_group, boss_ball_night_nom_group, boss_ball_ran_nom_group,boss2_nom_group):
 
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
@@ -59,6 +59,10 @@ class My_night(pygame.sprite.Sprite):
     self.boss_BGM = False
 
     self.weapon_idx = 0
+    self.stage_idx = 0
+    self.end_idx = 0
+
+    self.h_in = False
 
     self.night_imgs = [
       pygame.image.load("image/my/night/night.png"),
@@ -86,18 +90,50 @@ class My_night(pygame.sprite.Sprite):
     self.rect = self.rawrect
 
     self.font = pygame.font.Font(None, 100)  
-    self.font_out = pygame.font.Font(None, 108)  
+    self.font_out = pygame.font.Font(None, 108) 
+    self.endfont = pygame.font.Font("C:/Windows/Fonts/msgothic.ttc", 35)  
     self.over_text = self.font.render( "GAME OVER" , False, (255, 255, 255))
-    self.over_text_out_rect = (220, 160)
     self.over_text_rect = (220, 160)
+    self.endtexts1 =[
+      "1000時間をあなたは姫に与えました",
+      "姫とあなたはわずかな時間でしたが幸せに",
+      "過ごしました"
+    ]
+    self.endtexts2 =[
+      "10000時間をあなたは姫に与えました",
+      "姫とあなたはそれからの時間を共に",
+      "そしてしあわせに過ごしました"
+    ]
+    self.endtexts3 =[
+      "あなたは時間を姫に与えませんでした",
+      "あなたはその後姫を見殺しにしたとして",
+      "一生その身を追われることになりました"
+    ]
+    self.end_text1 = self.endfont.render( "" , False, (255, 255, 255))
+    self.end_text2 = self.endfont.render( "" , False, (255, 255, 255))
+    self.end_text3 = self.endfont.render( "" , False, (255, 255, 255))
+    self.end_text4 = self.font.render( "" , False, (255, 255, 255))
+    self.over_text_out_rect = (220, 160)
+    self.end_text_rect4 = (280, 450)
+    self.end_text_rect1 = (80, 100)
+    self.end_text_rect2 = (80, 150)
+    self.end_text_rect3 = (80, 200)
 
     self.bad_group = bad_group
     self.zombie_group = zombie_group
     self.ball_group = ball_group
+    self.fall_ball_group = fall_ball_group
     self.magic_man_group = magic_man_group
     self.magic_ball_group = magic_ball_group
     self.boss_group = boss_group
     self.boss_lazer_group = boss_lazer_group
+    self.boss_ball_night_group = boss_ball_night_group
+    self.boss_ball_ran_group = boss_ball_ran_group
+    self.boss_nom_group = boss_nom_group
+    self.boss2_nom_group = boss2_nom_group
+    self.boss_lazer_nom_group = boss_lazer_nom_group
+    self.boss_ball_night_nom_group = boss_ball_night_nom_group
+    self.boss_ball_ran_nom_group = boss_ball_ran_nom_group
     self.damage = 0 
     self.invincible = False
     self.invincible_start_time = 0 
@@ -198,10 +234,42 @@ class My_night(pygame.sprite.Sprite):
     self.status = Status.DEAD
 
   
+  def ending(self):
+    if globals.end_num == -1 :
+      return
+    pygame.mixer.music.stop()
+    if globals.end_num == 0:
+      self.end_text1 = self.endfont.render( self.endtexts1[0] , False, (255, 255, 255))
+      self.end_text2 = self.endfont.render( self.endtexts1[1] , False, (255, 255, 255))
+      self.end_text3 = self.endfont.render( self.endtexts1[2] , False, (255, 255, 255))
+      self.end_text4 = self.font.render( "Good End" , False, (255, 255, 255))
+    if globals.end_num == 1:
+      self.end_text1 = self.endfont.render( self.endtexts2[0] , False, (255, 255, 255))
+      self.end_text2 = self.endfont.render( self.endtexts2[1] , False, (255, 255, 255))
+      self.end_text3 = self.endfont.render( self.endtexts2[2] , False, (255, 255, 255))
+      self.end_text4 = self.font.render( "The End" , False, (255, 255, 255))
+    if globals.end_num == 2:
+      self.end_text1 = self.endfont.render( self.endtexts3[0] , False, (255, 255, 255))
+      self.end_text2 = self.endfont.render( self.endtexts3[1] , False, (255, 255, 255))
+      self.end_text3 = self.endfont.render( self.endtexts3[2] , False, (255, 255, 255))
+      self.end_text4 = self.font.render( "Bad End" , False, (255, 255, 255))
+
+    time.sleep(2)
+    self.win.fill((0, 0, 0))
+    self.rawrect = pygame.Rect(14000, 200, 40, 40) 
+    self.win.blit(self.end_text1, self.end_text_rect1)
+    self.win.blit(self.end_text2, self.end_text_rect2)
+    self.win.blit(self.end_text3, self.end_text_rect3)
+    self.win.blit(self.end_text4, self.end_text_rect4)
+    pygame.display.update()
+    time.sleep(15)
+    self.status = Status.DEAD
 
 
-
-  def update(self,time_limit,score_dis,player_dead):
+  def update(self,time_limit,player_dead):
+    if globals.treasure_get2 == True:
+      globals.treasure_knife = 1
+    self.h_in = False
     self.deadflug = player_dead
     if self.rawrect.x > 17080:
       self.rawrect.x = 17080
@@ -225,14 +293,20 @@ class My_night(pygame.sprite.Sprite):
     if self.status == Status.DEADING:
       self.deading()
 
+    if self.status == Status.END:
+      self.ending()
+
     if self.status == Status.NOMAL:
 
       self.rere = self.rawrect.y
-      self.score_dis = score_dis
       action = pygame.key.get_pressed()
 
+      if globals.ending_true == True:
+        globals.ending_true = False
+        self.status = Status.END
+
     # 移動処理
-      if self.score_dis == False:
+      if globals.score_dis == False:
         if self.line_move == True:
           if action[pygame.K_d]:
             self.right()
@@ -246,24 +320,19 @@ class My_night(pygame.sprite.Sprite):
         if action[pygame.K_k]:
             self.attck_bomb()
 
-        if action[pygame.K_UP] and not self.prev_up:  
-          self.weapon_idx = 1 - self.weapon_idx
-          self.cursor_SE.play()
-        self.prev_up = action[pygame.K_UP]
-      
-        if action[pygame.K_DOWN] and not self.prev_down:  
-            self.weapon_idx = 1 - self.weapon_idx
-            self.cursor_SE.play()
-        self.prev_down = action[pygame.K_DOWN]
-
-        if action[pygame.K_h] and not self.prev_h:  
-
+        if action[pygame.K_h]:  
+          self.h_in = True
+          if not self.prev_h:
             if 15330 <= self.rawrect.x <= 15390:
               globals.buy_flag = True
 
             elif 16060 <= self.rawrect.x <= 16100:
               self.inter_se.play()
               globals.hint_flag = True
+
+            elif 15545 <= self.rawrect.x <= 15575:
+              self.inter_se.play()
+              globals.end_true = True
 
             elif 17080 <= self.rawrect.x:
               self.inter_se.play()
@@ -273,6 +342,52 @@ class My_night(pygame.sprite.Sprite):
 
             
         self.prev_h = action[pygame.K_h]
+
+        if action[pygame.K_UP] and not self.prev_up:  
+          if self.h_in == False:
+            self.weapon_idx = 1 - self.weapon_idx
+            if self.end_idx != 0:
+              self.end_idx = self.end_idx - 1
+            else:
+              self.end_idx = 2
+            if globals.stage1_clear == True and globals.stage2_clear == False:
+              self.stage_idx = 1 - self.stage_idx
+            elif globals.stage1_clear == True and globals.stage2_clear == True:
+              if self.stage_idx != 0:
+                self.stage_idx = self.stage_idx - 1
+              else:
+                self.stage_idx = 2
+
+            if globals.hints_idx != 0:
+              globals.hints_idx = globals.hints_idx - 1
+            else:
+              globals.hints_idx = 2
+            self.cursor_SE.play()
+        self.prev_up = action[pygame.K_UP]
+      
+        if action[pygame.K_DOWN] and not self.prev_down:  
+          if self.h_in == False:
+            self.weapon_idx = 1 - self.weapon_idx
+            if self.end_idx != 2:
+                self.end_idx = self.end_idx + 1
+            else:
+                self.end_idx = 0
+            if globals.stage1_clear == True and globals.stage2_clear == False:
+              self.stage_idx = 1 - self.stage_idx
+            elif globals.stage1_clear == True and globals.stage2_clear == True:
+              if self.stage_idx != 2:
+                self.stage_idx = self.stage_idx + 1
+              else:
+                self.stage_idx = 0
+
+            if globals.hints_idx != 2:
+              globals.hints_idx = globals.hints_idx + 1
+            else:
+              globals.hints_idx = 0
+            self.cursor_SE.play()
+        self.prev_down = action[pygame.K_DOWN]
+
+
 
         
 
@@ -310,7 +425,6 @@ class My_night(pygame.sprite.Sprite):
             self.sound = self.night_mucs[1]
             self.sound.play()
       
-      
       for zombie in self.zombie_group:
         if self.rawrect.colliderect(zombie.rawrect):
           if not self.invincible:
@@ -328,7 +442,15 @@ class My_night(pygame.sprite.Sprite):
             self.invincible_start_time = pygame.time.get_ticks()
             self.sound = self.night_mucs[1]
             self.sound.play()
-      
+
+      for fall_ball in self.fall_ball_group:
+        if self.rawrect.colliderect(fall_ball.rawrect):
+          if not self.invincible:
+            self.damage = 7
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
 
       for magic_man in self.magic_man_group:
         if self.rawrect.colliderect(magic_man.rawrect):
@@ -368,6 +490,69 @@ class My_night(pygame.sprite.Sprite):
             self.sound = self.night_mucs[1]
             self.sound.play()
 
+      for boss_ball_night in self.boss_ball_night_group:
+        if self.rawrect.colliderect(boss_ball_night.rawrect):
+          if not self.invincible:
+            self.damage = 6
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+
+      for boss_ball_ran in self.boss_ball_ran_group:
+        if self.rawrect.colliderect(boss_ball_ran.rawrect):
+          if not self.invincible:
+            self.damage = 6
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+
+      for boss_ball_ran_nom in self.boss_ball_ran_nom_group:
+        if self.rawrect.colliderect(boss_ball_ran_nom.rawrect):
+          if not self.invincible:
+            self.damage = 6
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+
+      for boss_ball_night_nom in self.boss_ball_night_nom_group:
+        if self.rawrect.colliderect(boss_ball_night_nom.rawrect):
+          if not self.invincible:
+            self.damage = 6
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+
+      for boss_nom in self.boss_nom_group:
+        if self.rawrect.colliderect(boss_nom.rawrect):
+          if not self.invincible:
+            self.damage = 4
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+          
+      for boss_lazer_nom in self.boss_lazer_nom_group:
+        if self.rawrect.colliderect(boss_lazer_nom.rawrect):
+          if not self.invincible:
+            self.damage = 6
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+
+      for boss2_nom in self.boss2_nom_group:
+        if self.rawrect.colliderect(boss2_nom.rawrect):
+          if not self.invincible:
+            self.damage = 4
+            self.invincible = True
+            self.invincible_start_time = pygame.time.get_ticks()
+            self.sound = self.night_mucs[1]
+            self.sound.play()
+
 
 
 
@@ -387,7 +572,7 @@ class My_night(pygame.sprite.Sprite):
 
 
     # アニメーション処理
-      if self.score_dis == False:
+      if globals.score_dis == False:
         if not any(action) and self.on_ground:
           self.image = pygame.transform.flip(self.night_imgs[0], self.isleft, False)
         elif self.attck_bool:
@@ -411,4 +596,6 @@ class My_night(pygame.sprite.Sprite):
           pygame.mixer.music.load(self.BGM[1])
           pygame.mixer.music.set_volume(0.3)
           pygame.mixer.music.play(-1)
+          globals.boss_start = True
+          globals.fall_ball_group.empty()
           self.boss_BGM = True

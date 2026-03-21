@@ -6,4 +6,5 @@ class Status(Enum):
     DEAD = auto()
     WIN = auto()
     ROED = auto()
-    
+    END = auto()
+    RESET = auto()

@@ -37,7 +37,7 @@ class Boss(pygame.sprite.Sprite):
     self.map = map
     self.status = Status.NOMAL
     self.vx = -4
-    self.life = 120
+    self.life = 80
     self.born = True
     self.Width = 900
     self.margin = 100
@@ -218,6 +218,7 @@ class Boss(pygame.sprite.Sprite):
 
         if self.life <= 0:
           self.kill()
+          globals.stage1_clear = True
           self.live = False
           globals.enemy_kill += self.score_up
           self.dead = True

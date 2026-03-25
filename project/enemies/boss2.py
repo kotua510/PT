@@ -221,6 +221,7 @@ class Boss2(pygame.sprite.Sprite):
 
         if self.life <= 0:
           self.kill()
+          globals.stage2_clear = True
           self.live = False
           globals.enemy_kill += self.score_up
           self.dead = True
@@ -268,9 +269,9 @@ class Boss_ball_night(pygame.sprite.Sprite):
     self.vyadd = 0
 
 
-  def update(self, knife_group,night_status):
+  def update(self, knife_group,night_status,boss_live):
 
-    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET or boss_live == False  :
       self.kill()
 
     if self.status == Status.NOMAL:
@@ -359,9 +360,9 @@ class Boss_ball_ran(pygame.sprite.Sprite):
     self.vyadd = 0
 
 
-  def update(self, knife_group,night_status):
+  def update(self, knife_group,night_status,boss_live):
 
-    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
+    if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET or boss_live == False :
       self.kill()
 
     if self.status == Status.NOMAL:

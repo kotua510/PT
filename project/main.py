@@ -415,7 +415,6 @@ def main():
         
         
         knife_rawrect = globals.knife_group.sprites()[0].rawrect if globals.knife_group else pygame.Rect(0, 0, 0, 0)
-
         # スクロール量を更新
         map.update_scroll(night.rawrect)
 

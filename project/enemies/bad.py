@@ -1,8 +1,4 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random 
 from status import Status
 import  globals
 
@@ -42,11 +38,8 @@ class Bad(pygame.sprite.Sprite):
       self.kill()
 
     if self.status == Status.NOMAL:
-
       self.scroll_x = self.map.scroll_x
-
       global enemy_kill
-
       self.sound.set_volume(1.0)
 
       if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
@@ -56,8 +49,6 @@ class Bad(pygame.sprite.Sprite):
 
       if not self.visible:
         return  # 表示範囲外なら停止
-
-
 
 
       self.rawrect.x += self.vx
@@ -71,11 +62,11 @@ class Bad(pygame.sprite.Sprite):
           knife.kill()
           self.sound.play()
           if self.life > 0:
-                    self.life -= (1 + globals.knife_plus + globals.treasure_knife)
+            self.life -= (1 + globals.knife_plus + globals.treasure_knife)
 
           if self.life <= 0:
-                    globals.enemy_kill += self.score_up
-                    self.kill()
+            globals.enemy_kill += self.score_up
+            self.kill()
       
       for bomb in bomb_group:
         if self.hitbox.colliderect(bomb.rawrect):
@@ -83,8 +74,5 @@ class Bad(pygame.sprite.Sprite):
           self.kill()
           bomb.kill()
 
-      if self.rect.x <= 0:
+      if self.rect.x <= 0 or self.rect.y >= 700:
         self.kill()
-
-      if self.rect.y >= 700:
-          self.kill()

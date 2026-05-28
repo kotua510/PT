@@ -1,8 +1,4 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random 
 import globals
 from status import Status
 
@@ -24,7 +20,6 @@ class Hud(pygame.sprite.Sprite, ):
       pygame.image.load("image/my/wepon/knife.png"),
     ]
     globals.bomb_counter
-
     self.hp_bar_image = self.imgs[0]
     self.hp_memory_image = self.imgs[1]
     self.time_frame_image = self.imgs[2]
@@ -72,7 +67,7 @@ class Hud(pygame.sprite.Sprite, ):
     self.time_int = "259"
     self.score_high_str = "BEST SCORE!!!"
     self.total_str = "TOTAL"
-    self.total_int = "359"
+    self.total_int = "39"
 
     self.score_up = True
 
@@ -81,29 +76,21 @@ class Hud(pygame.sprite.Sprite, ):
     self.time_str_text = self.score_font.render(self.time_str, False, (255, 255, 255))
     self.score_high_text =self.score_font.render(self.score_high_str, False, (255, 255, 255))
     self.total_str_text = self.score_font.render(self.total_str, False, (255, 255, 255))
-
-
     self.current_time = pygame.time.get_ticks()
     self.base_time = self.current_time 
     self.keep_time = globals.player_score
     self.last_time = 0
-
     self.high_score = 600
     self.now_time = 0
-
     self.wallno = False
     self.score = 0
     self.limit_time = 0
-
     self.first_score = True
-
     self.first_camp = True
-    
     self.camp_BGM= pygame.mixer.Sound("sound/camp/camp_BGM.mp3")
     self.time_score_base = 500
     self.time_spemd = 0
     self.deadflug = False
-
 
   def update(self,map_clock_counter, map_bomb_get, night_damage,boss_dead,night_status):
     if night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET:
@@ -147,14 +134,9 @@ class Hud(pygame.sprite.Sprite, ):
 
 
       globals.window.fill((144, 215, 236))
-
       self.time_text = self.font.render( str(globals.player_score), False, (255, 255, 255))
 
-
-
   def draw(self, win):
-
-    
 
     self.coin_text = self.score_font.render(str(self.coins), False, (255, 255, 255))
     self.enemy_int_text = self.score_font.render(str(globals.enemy_kill), False, (255, 255, 255))

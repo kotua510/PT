@@ -1,8 +1,4 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random 
 from globals import Width
 
 class Knife(pygame.sprite.Sprite):
@@ -27,12 +23,8 @@ class Knife(pygame.sprite.Sprite):
     self.map = map
     self.scroll_x = self.map.scroll_x
 
-
-
   def update(self):
     
-
-
     self.knife_vx = -8 if self.isleft else 8
     action = pygame.key.get_pressed()
     if action[pygame.K_d]:
@@ -41,17 +33,9 @@ class Knife(pygame.sprite.Sprite):
       self.knife_vx = -10 if self.isleft else 6
 
     self.rawrect.x += self.knife_vx
-
-    # スクロール量取得
     scroll_x = self.map.scroll_x
-
-    # 描画用の座標に変換
+    # 描画用の座標を計算
     self.rect.x = self.rawrect.x - scroll_x
-
     self.collision = self.map.check_collision_knife(self.rawrect)
-
-    if self.rect.left > Width or self.rect.left < 0:
+    if self.rect.left > Width or self.rect.left < 0 or self.collision == True:
             self.kill()
-    
-    if self.collision == True:
-      self.kill()

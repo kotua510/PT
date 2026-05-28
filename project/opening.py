@@ -7,11 +7,8 @@ class Opening(pygame.sprite.Sprite):
   def __init__(self):
     super().__init__()
 
-
     self.image = pygame.image.load("image/stage/gimmick/cloud_title.png")
-
     window.fill((144, 215, 236))
-
     self.cloud1_rect = pygame.Rect(100,30,40,40)
     self.cloud2_rect = pygame.Rect(700,70,40,40)
     self.title_rect = pygame.Rect(180, 150, 40, 40)
@@ -28,8 +25,6 @@ class Opening(pygame.sprite.Sprite):
     self.enter_flame = self.enter_flame_font.render(self.enter_text, False, (0,0,0))
     self.title = self.title_font.render(self.title_text, False, (255,255,255))
     self.enter = self.enter_font.render(self.enter_text, False, (255,255,255))
-    clock = pygame.time.Clock()
-    
     opening = True
 
   def update(self):
@@ -41,7 +36,6 @@ class Opening(pygame.sprite.Sprite):
         window.blit(self.title, self.title_rect)
         window.blit(self.enter_flame, self.enter_flame_rect)
         window.blit(self.enter, self.enter_rect)
-
 
         pygame.display.flip()
 

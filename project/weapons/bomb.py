@@ -1,8 +1,4 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random 
 from globals import explosion_group
 
 class Bomb(pygame.sprite.Sprite):
@@ -11,7 +7,6 @@ class Bomb(pygame.sprite.Sprite):
     
       pygame.sprite.Sprite.__init__(self)
 
-
       self.weapon_imgs = [
         pygame.image.load("image/my/wepon/bomb.png"),
         pygame.image.load("image/my/wepon/explosion.png"),
@@ -19,10 +14,7 @@ class Bomb(pygame.sprite.Sprite):
       ]
 
       self.map = map
-
       self.night_map_rect = night_map_rect
-
-
       self.on_ground = False
       self.image = self.weapon_imgs[0] 
       self.rect = self.image.get_rect()  #まずは自分のrectを作成
@@ -39,13 +31,9 @@ class Bomb(pygame.sprite.Sprite):
   def update(self):
 
       self.hitbox = self.rawrect.inflate(20, 20)
-
-      self.rawrect.x += self.bomb_vx  # 横に進む
-
-      self.rawrect.y += self.bomb_vy #放物線
-
+      self.rawrect.x += self.bomb_vx  
+      self.rawrect.y += self.bomb_vy
       self.bomb_vy += 1
-
       self.collision, self.wall = self.map.check_collision_bomb(self.rawrect)
       if self.collision == True and self.wall == False:
         self.on_ground = True
@@ -54,11 +42,9 @@ class Bomb(pygame.sprite.Sprite):
         self.on_ground = True
         self.wall_ec = True
 
-
       scroll_x = self.map.scroll_x
       self.rect.x = int(self.rawrect.x - scroll_x)
       self.rect.y = int(self.rawrect.y)
-
 
       if self.on_ground == True:
         self.rect.y -= 13
@@ -66,19 +52,16 @@ class Bomb(pygame.sprite.Sprite):
         self.hitbox = self.rawrect
         night_rect = self.night_map_rect
     
-
-
-    # 爆発エフェクトクラスで作成
         if self.wall_ec == False:
-          explosion_group.add(Explosion((cx, cy), night_rect, self.map))  # 中心
-          explosion_group.add(Explosion((cx - 20, cy), night_rect, self.map))  # 左
-          explosion_group.add(Explosion((cx + 20, cy), night_rect, self.map))  # 右
-          explosion_group.add(Explosion((cx, cy - 20), night_rect, self.map))  # 上
+          explosion_group.add(Explosion((cx, cy), night_rect, self.map))  
+          explosion_group.add(Explosion((cx - 20, cy), night_rect, self.map))  
+          explosion_group.add(Explosion((cx + 20, cy), night_rect, self.map))  
+          explosion_group.add(Explosion((cx, cy - 20), night_rect, self.map)) 
 
         if self.wall_ec == True:
-          explosion_group.add(Explosion((cx, cy), night_rect, self.map))  # 中心
-          explosion_group.add(Explosion((cx, cy + 20), night_rect, self.map))  # 左
-          explosion_group.add(Explosion((cx, cy - 20), night_rect, self.map))  # 上
+          explosion_group.add(Explosion((cx, cy), night_rect, self.map))
+          explosion_group.add(Explosion((cx, cy + 20), night_rect, self.map))
+          explosion_group.add(Explosion((cx, cy - 20), night_rect, self.map))
         
         self.kill()
       if self.rect.y >= 600:
@@ -98,9 +81,8 @@ class Explosion(pygame.sprite.Sprite):
         self.night_rect = night_rect
         self.rect = self.image.get_rect(center=bomb_rect)
         self.explosion_sound = True
-        self.life = 40  # 爆発エフェクトの維持フレーム数
-
-        # 初期位置を記録
+        self.life = 40  # エフェクト維持フレーム数
+        # 初期位置の記録
         self.initial_x = self.rect.x
         self.initial_scroll_x = self.map.scroll_x  # 初期のスクロール量を記録
 
@@ -112,11 +94,10 @@ class Explosion(pygame.sprite.Sprite):
         if self.life <= 0:
             self.kill()
 
-        # スクロール状態に応じて爆発エフェクトの位置を調整
         current_scroll_x = self.map.scroll_x
         if self.night_rect.x < self.map.nomove_X:
-            # スクロールしていない場合、位置を固定
+            # スクロールしていない時は位置を固定
             self.rect.x = self.initial_x
         else:
-            # スクロールしている場合、スクロール量を考慮して位置を調整
+            # スクロールしている時はスクロールの伴い位置を調整
             self.rect.x = self.initial_x - (current_scroll_x - self.initial_scroll_x)

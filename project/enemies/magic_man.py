@@ -1,8 +1,5 @@
 import pygame
-from enum import Enum, auto
-import time
 import math
-import random 
 from status import Status
 import globals
 
@@ -12,7 +9,6 @@ class Magic_man(pygame.sprite.Sprite):
   def  __init__(self, magic_man_rawrect,night,knife_rawrect,exc_rawrect,map):
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
-
 
     self.image = pygame.image.load("image/stage/enemy/magic_man.png")
     self.sons = [
@@ -46,13 +42,9 @@ class Magic_man(pygame.sprite.Sprite):
 
     if self.status == Status.NOMAL:
 
-
         self.scroll_x = self.map.scroll_x
-
         global enemy_kill
-
         self.sound = self.sons[0]
-
         self.sound.set_volume(1.0)
 
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
@@ -64,14 +56,13 @@ class Magic_man(pygame.sprite.Sprite):
             return  # 表示範囲外なら停止
 
         self.vy += 1  
-        
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
         self.hitbox = self.rawrect
         self.nowtime = pygame.time.get_ticks()
-
         self.rawrect.y += self.vy
         self.collision, self.line, self.sideline, self.now_tile = self.map.check_collision(self.rawrect)
+        
         if self.collision or self.line or self.sideline:
             self.rawrect.y = (self.rawrect.y // 40 ) * 40
             if self.vy > 0:
@@ -93,7 +84,6 @@ class Magic_man(pygame.sprite.Sprite):
                     globals.enemy_kill += self.score_up
                     self.kill()
 
-
         for bomb in bomb_group:
             if self.hitbox.colliderect(bomb.rawrect):
               globals.enemy_kill += self.score_up
@@ -101,8 +91,7 @@ class Magic_man(pygame.sprite.Sprite):
 
         if self.attck:
           self.start_attck_time = pygame.time.get_ticks()
-          self.attck = False
-        
+          self.attck = False        
         elif not self.attck:
           self.now_attck_time = pygame.time.get_ticks()
           self.attck_time = (self.now_attck_time - self.start_attck_time) / 1000
@@ -112,10 +101,8 @@ class Magic_man(pygame.sprite.Sprite):
               self.sound.play()
               magic_ball = Magic_ball(self.rawrect,self.rect, self.night_rawrect, self.map)
               globals.magic_ball_group.add(magic_ball)
-
         if self.rect.x + self.margin <= 0:
             self.kill()
-
 
 class Magic_ball(pygame.sprite.Sprite):
   def __init__(self, magic_man_rawrect, magic_man_rect, night_rawrect, map):
@@ -144,20 +131,15 @@ class Magic_ball(pygame.sprite.Sprite):
 
     self.rect.x = self.rawrect.x - self.map.scroll_x
     self.rect.y = self.rawrect.y
-
     target_x = self.night_rawrect.centerx
     target_y = self.night_rawrect.centery
-
     self.dx = target_x - self.rawrect.centerx
     self.dy = target_y - self.rawrect.centery
-
     distance = math.hypot(self.dx, self.dy)
-
     if distance == 0:
       distance = 1
     
     self.vx = (self.dx / distance) * 4
     self.vy = (self.dy / distance) * 4
-
     self.rawrect.x += self.vx
     self.rawrect.y += self.vy

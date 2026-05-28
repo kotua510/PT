@@ -1,14 +1,9 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
 import random 
 from status import Status
 import globals
-import map
 
 pygame.init()
-
 
 class Boss2_nom(pygame.sprite.Sprite):
   def  __init__(self, boss_rawrect,night,knife_rawrect,exc_rawrect,map):
@@ -61,31 +56,20 @@ class Boss2_nom(pygame.sprite.Sprite):
     self.score_up = 150
     self.live = True
 
-
-
-
   def update(self, knife_group, bomb_group,night_status):
     if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
       self.kill()
 
     if self.status == Status.NOMAL:
 
-
         self.scroll_x = self.map.scroll_x
-
         self.sound.set_volume(1.0)
-
         global enemy_kill
-
         self.nowtime = pygame.time.get_ticks()
-
         self.trun_box = self.rawrect.inflate(240,0)
-
-
         self.foot_rawrect = pygame.Rect(self.rawrect.x, self.rawrect.bottom, self.rawrect.width, 1)
         self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
         self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
-
 
         if self.first:
           if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
@@ -98,18 +82,13 @@ class Boss2_nom(pygame.sprite.Sprite):
             return  # 表示範囲外なら停止
 
         self.vy += 1 
-
-        
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
         self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 10]], self.isleft, False)
         self.move_num += 1
         self.hitbox = self.rawrect.inflate(0, 0)
-
         old_bottom = self.rawrect.bottom
-
         self.rawrect.y += self.vy
-
         self.foot_collision, self.foot_line, self.foot_sideline, self.foot_now_tile = self.map.check_collision(self.foot_rawrect)
         if self.foot_collision or self.foot_line or self.foot_sideline:
           if self.vy > 0:
@@ -122,16 +101,9 @@ class Boss2_nom(pygame.sprite.Sprite):
         else:
           self.on_ground = False
 
-
-
-
         self.rawrect.x += self.vx
-
         self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
         self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
-
-
-
         self.right_collision, self.right_line, self.right_sideline, self.right_now_tile = self.map.check_collision(self.left_rawrect)
 
         if self.right_collision:
@@ -272,15 +244,10 @@ class Boss_ball_night_nom(pygame.sprite.Sprite):
 
     if self.status == Status.NOMAL:
 
-
         self.scroll_x = self.map.scroll_x
-
-
         self.foot_rawrect = pygame.Rect(self.rawrect.x, self.rawrect.bottom, self.rawrect.width, 1)
         self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
         self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
-
-
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
         else:
@@ -288,7 +255,6 @@ class Boss_ball_night_nom(pygame.sprite.Sprite):
 
         if not self.visible:
             return  # 表示範囲外なら停止
-
 
         self.vyadd += 1
         if self.vyadd >= 2:
@@ -300,12 +266,9 @@ class Boss_ball_night_nom(pygame.sprite.Sprite):
         self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 40]], self.isleft, False)
         self.move_num += 1
         self.hitbox = self.rawrect.inflate(0, 0)
-
         old_bottom = self.rawrect.bottom
-
         self.rawrect.y += self.vy
         self.rect.y = self.rawrect.y
-
 
         # 武器との衝突判定
         for knife in knife_group:
@@ -317,7 +280,6 @@ class Boss_ball_night_nom(pygame.sprite.Sprite):
                 if self.life <= 0:
                     globals.enemy_kill += self.score_up
                     self.kill()
-
 
         if self.rect.y >= 700:
           self.kill()
@@ -363,14 +325,10 @@ class Boss_ball_ran_nom(pygame.sprite.Sprite):
 
     if self.status == Status.NOMAL:
 
-
         self.scroll_x = self.map.scroll_x
-
-
         self.foot_rawrect = pygame.Rect(self.rawrect.x, self.rawrect.bottom, self.rawrect.width, 1)
         self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
         self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
-
 
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
@@ -391,12 +349,9 @@ class Boss_ball_ran_nom(pygame.sprite.Sprite):
         self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 40]], self.isleft, False)
         self.move_num += 1
         self.hitbox = self.rawrect.inflate(0, 0)
-
         old_bottom = self.rawrect.bottom
-
         self.rawrect.y += self.vy
         self.rect.y = self.rawrect.y
-
 
         # 武器との衝突判定
         for knife in knife_group:

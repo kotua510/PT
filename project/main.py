@@ -1,8 +1,4 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random 
 from hud import Hud
 from map import Map
 from camp import Camp
@@ -24,66 +20,41 @@ from status import Status
 from opening import Opening
 
 
-
-
-
-
 pygame.init()
 
 def init():
 
   group = pygame.sprite.RenderUpdates()
-
   map =Map()
-
   camp = Camp()
-
   hud = Hud(map.clock_counter, map.bomb_get)
-
   night = My_night(map, globals.window,globals.player_score, globals.bad_group, globals.zombie_group, globals.ball_group,globals.fall_ball_group, globals.magic_man_group, globals.magic_ball_group,globals.boss_group,globals.boss_lazer_group,globals.boss_ball_night_group,globals.boss_ball_ran_group,globals.boss_ball_ran_nom_group,globals.boss_ball_night_nom_group,globals.boss_lazer_nom_group,globals.boss_nom_group,globals.boss2_nom_group)
-  
-
-
   group.add(night)
 
   return group, night, map, hud, camp
 
-
 def opening():
   pygame.init()
-
-  #pygame.mixer.init()
   pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
-
-  pygame.mixer.set_num_channels(64)
+  pygame.mixer.set_num_channels(128)
 
   title_BGM = pygame.mixer.Sound("sound/stage/title.mp3")
-
   opening_bool = True
-
   opening = Opening()
-  
   title_BGM.set_volume(0.2)
   title_BGM.play(-1)
 
-
   while opening_bool:
     opening.update()
-
     action = pygame.key.get_pressed()
     if action[pygame.K_RETURN]:
           opening_bool = False
           title_BGM.stop()
           
-
     for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 opening_bool = False
                 pygame.quit()
-
-
-
-
 
 def clear_enemy_groups():
   globals.bad_group.empty()
@@ -100,14 +71,9 @@ def clear_enemy_groups():
 
 def main():
   pygame.init()
-  #画面を作成する
-
   pygame.mixer.init()
-
   pygame.mixer.set_num_channels(128)
-
   clock = pygame.time.Clock()
-
 
   group, night, map, hud, camp = init()
   clear_enemy_groups()
@@ -140,7 +106,6 @@ def main():
         bad = Bad((pos[0], pos[1], 40, 40), night, knife_rawrect, bomb_rawrect, map)
         globals.bad_group.add(bad, layer=2)
 
-
   for pos in zombie_positions:
         zombie = Zombie((pos[0], pos[1], 40, 40), night, knife_rawrect, bomb_rawrect, map)
         globals.zombie_group.add(zombie, layer=2)
@@ -149,17 +114,12 @@ def main():
         ball = Ball((pos[0], pos[1], 80, 80), night, knife_rawrect, bomb_rawrect, map)
         globals.ball_group.add(ball, layer=2)
         
-
-
   for pos in magic_man_positions:
         magic_man = Magic_man((pos[0], pos[1], 40, 40), night, knife_rawrect, bomb_rawrect, map)
         globals.magic_man_group.add(magic_man, layer=2)
 
   boss = Boss((14280, 440, 80, 80), night, knife_rawrect, bomb_rawrect, map)
   globals.boss_group.add(boss)
-
-  
-
 
   while running:
         for e in pygame.event.get():
@@ -379,14 +339,10 @@ def main():
             globals.magic_man_group.add(magic_man, layer=2)
 
 
-
           pygame.display.flip()
           continue
 
         map.update(night.rawrect.center,boss.dead,night.status)
-
-
-
 
         if weapon_cooltime:
             attck_cooltime = (weapon_now_time - attck_cooltime_start) / 1000
@@ -413,7 +369,6 @@ def main():
                     globals.bomb_counter -= 1
         
         
-        
         knife_rawrect = globals.knife_group.sprites()[0].rawrect if globals.knife_group else pygame.Rect(0, 0, 0, 0)
         # スクロール量を更新
         map.update_scroll(night.rawrect)
@@ -426,7 +381,7 @@ def main():
         hud.update(map.clock_counter, map.bomb_get, night.damage,boss.dead,night.status)
         globals.bad_group.update(globals.knife_group, globals.bomb_group,night.status)
         globals.zombie_group.update(globals.knife_group, globals.bomb_group,night.status)
-        globals.ball_group.update(globals.knife_group, globals.bomb_group,night.status)
+        globals.ball_group.update(globals.knife_group,night.status)
         globals.fall_ball_group.update(globals.knife_group, globals.bomb_group,night.status)
         globals.magic_man_group.update(globals.knife_group, globals.bomb_group,night.status)
         globals.magic_ball_group.update(night.status)

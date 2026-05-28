@@ -1,7 +1,5 @@
 import pygame
-from enum import Enum, auto
 import globals
-import time
 from status import Status 
 
 pygame.init()
@@ -158,23 +156,15 @@ class Camp(pygame.sprite.Sprite):
     ]
 
     self.bombs = 0
-
-
     self.font =  pygame.font.Font("C:/Windows/Fonts/msgothic.ttc", 25)
     self.enter_text = self.font.render("Enter!", False, (0,0,0))
     self.enter_text2 = self.font.render("Enter!", False, (255,255,255))
-
     self.key = pygame.key.get_pressed()
-
     self.serif = False
-
     self.white = (255,255,255)
     self.yellow = (255,255,0)
-
-
     self.hint1_first = True
     self.hint2_first = True
-
     self.weapon_idx = 0
     self.stage_idx = 0
     self.end_idx = 0
@@ -182,18 +172,13 @@ class Camp(pygame.sprite.Sprite):
     self.hint1_first = globals.hint1_first
     self.hint2_first = globals.hint2_first
     self.debt = globals.debt
-
     self.debt_ok = False
     self.debt_on = False
     self.debt_back = globals.debt_back
-
     self.prev_return = self.key[pygame.K_RETURN]
-
     self.knife_idx = globals.keep_knife_idx
     self.debt_on = globals.keep_debt_on
-
     self.stage_num = 0
-
 
   def serif_window(self,character,target):
       
@@ -234,7 +219,6 @@ class Camp(pygame.sprite.Sprite):
       self.no_weapon_text2 = self.font.render(self.no_weapon_text[1], False, (255,255,255))
       self.character_text = self.font.render(self.character, False, (255,255,255))
       self.score_text = self.font.render(str("所持時間:" + str(self.score)), False, (255,255,255))
-
 
       if globals.buy_flag == True:
         if self.debt_on == False:
@@ -349,8 +333,6 @@ class Camp(pygame.sprite.Sprite):
         globals.window.blit(self.character_text,(10,208,150,150))
 
 
-
-
   def serif_window_church(self,character,target,idx,score):
       self.character = character
       self.serif_set = target
@@ -384,18 +366,11 @@ class Camp(pygame.sprite.Sprite):
 
 
       self.debt_end_text0 = self.font.render(self.debt_end_text[0], False, (255,255,255))
-
       self.debt_back_text1 = self.font.render(self.debt_back_text[0], False, (255,255,255))
       self.debt_back_text2 = self.font.render(self.debt_back_text[1], False, (255,255,255))
-      
       self.debt_back_text3 = self.font.render(self.debt_back_text[2], False, (255,255,255))
-
       self.debt_back_text4 = self.font.render(self.debt_back_text[3], False, (255,255,255))
       
-
-
-
-
 
       self.weapontexts = [
       str("お宝ヒント:1"),
@@ -409,8 +384,6 @@ class Camp(pygame.sprite.Sprite):
       str("")
         ]
 
-
-      
       if globals.hints_idx == 0:
         self.weapon_text1 = self.font.render(self.weapontexts[0], False, self.yellow)
         self.weapon_text2 = self.font.render(self.weapontexts[1], False, self.white)
@@ -594,8 +567,6 @@ class Camp(pygame.sprite.Sprite):
       self.stage_text2 = self.font.render(self.stagetexts[1], False, (255,255,255))
       self.stage_text3 = self.font.render(self.stagetexts[2], False, (255,255,255))
 
-
-
       if globals.out_camp == True:
           if self.stage_idx == 0:
             globals.stage_num = 0
@@ -605,7 +576,6 @@ class Camp(pygame.sprite.Sprite):
             globals.stage_num = 2
 
           globals.out_camp = False
-
 
       self.stagetexts = [
             "ステージ1",
@@ -621,11 +591,8 @@ class Camp(pygame.sprite.Sprite):
         self.stage_text3 = self.font.render(self.stagetexts[2], False, self.yellow)
 
 
-      
       pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
       pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
-
-
 
       globals.window.blit(self.human_text1,(10,20,150,150))
       globals.window.blit(self.human_text2,(10,60,150,150))
@@ -658,8 +625,6 @@ class Camp(pygame.sprite.Sprite):
       self.character_text = self.font.render(self.character, False, (255,255,255))
       self.score_text = self.font.render(str("所持時間:" + str(globals.player_score)), False, (255,255,255))
 
-
-
       if globals.end_true == True:
           if self.end_idx == 0:
             if globals.player_score >= 1000:
@@ -684,7 +649,6 @@ class Camp(pygame.sprite.Sprite):
         self.choise_text3 = self.font.render(self.choisetexts[2], False, self.yellow)
 
 
-      
       pygame.draw.rect(globals.window, (255,255,255),(0,0,900,200))
       pygame.draw.rect(globals.window, (0,0,0),(6,6,888,188))
 
@@ -708,8 +672,6 @@ class Camp(pygame.sprite.Sprite):
       globals.window.blit(self.choise_text3,(560,170,150,150))
 
 
-
-
   def update(self, night_rawrect, night_weapon_idx,night_stage_idx,night_end_idx,night_status):
     if night_status == Status.DEADING or night_status == Status.DEAD:
       globals.keep_knife_idx = self.knife_idx
@@ -731,26 +693,17 @@ class Camp(pygame.sprite.Sprite):
 
     self.night_rawrect = night_rawrect
     self.night_rawrect_x = self.night_rawrect.x
-
     self.enter_rect = night_rawrect.copy()
     self.enter_rect_y = self.enter_rect.y - 30
-
     self.weapon_idx = night_weapon_idx
     self.stage_idx = night_stage_idx
     self.end_idx = night_end_idx
-
     self.key = pygame.key.get_pressed()
-
 
     if self.key[pygame.K_RETURN] and not self.prev_return:  
       self.serif = True
       self.SEs[0].play()
     self.prev_return = self.key[pygame.K_RETURN]
-
-
-
-
-
 
 
     if 15100 <= self.night_rawrect_x <= 15150:
@@ -814,5 +767,3 @@ class Camp(pygame.sprite.Sprite):
 
     if globals.out_camp == True:
       globals.restart = True
-
-

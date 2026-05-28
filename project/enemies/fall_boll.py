@@ -1,8 +1,4 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random
 from status import Status
 import globals
 
@@ -44,7 +40,6 @@ class Fall_Ball(pygame.sprite.Sprite):
     self.score_up = 100
     self.vyadd = 0
 
-
   def update(self, knife_group,bomb_group,night_status):
 
     if night_status == Status.DEADING or night_status == Status.DEAD or night_status == Status.ROED or night_status == Status.END or night_status == Status.RESET  :
@@ -52,17 +47,11 @@ class Fall_Ball(pygame.sprite.Sprite):
 
     if self.status == Status.NOMAL:
 
-
         self.scroll_x = self.map.scroll_x
-
         global enemy_kill
-
-
         self.foot_rawrect = pygame.Rect(self.rawrect.x, self.rawrect.bottom, self.rawrect.width, 1)
         self.right_rawrect = pygame.Rect(self.rawrect.right, self.rawrect.top, 1, self.rawrect.height)
         self.left_rawrect = pygame.Rect(self.rawrect.left - 1, self.rawrect.top, 1, self.rawrect.height)
-
-
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
         else:
@@ -70,7 +59,6 @@ class Fall_Ball(pygame.sprite.Sprite):
 
         if not self.visible:
             return  # 表示範囲外なら停止
-
 
         self.vyadd += 1
         if self.vyadd >= 3:
@@ -82,12 +70,9 @@ class Fall_Ball(pygame.sprite.Sprite):
         self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 40]], self.isleft, False)
         self.move_num += 1
         self.hitbox = self.rawrect.inflate(0, 0)
-
         old_bottom = self.rawrect.bottom
-
         self.rawrect.y += self.vy
         self.rect.y = self.rawrect.y
-
 
         # 武器との衝突判定
         for knife in knife_group:
@@ -99,8 +84,6 @@ class Fall_Ball(pygame.sprite.Sprite):
                 if self.life <= 0:
                     globals.enemy_kill += self.score_up
                     self.kill()
-
-
 
         if self.rect.y >= 700:
           self.rawrect = self.rawrect_origin.copy()

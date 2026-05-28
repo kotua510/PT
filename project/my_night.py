@@ -1,24 +1,17 @@
 import pygame
-from enum import Enum, auto
 import time
-import math
-import random 
 from status import Status
 import globals
 
 pygame.init()
 
-
 class My_night(pygame.sprite.Sprite):
   anime_walk_index = [0,0,0,1,1,1]
-
-
 
   def __init__(self,map,window,time_limit,bad_group, zombie_group, ball_group,fall_ball_group,magic_man_group, magic_ball_group, boss_group,boss_lazer_group, boss_ball_night_group, boss_ball_ran_group, boss_nom_group,boss_lazer_nom_group, boss_ball_night_nom_group, boss_ball_ran_nom_group,boss2_nom_group):
 
     super().__init__()
     pygame.sprite.Sprite.__init__(self)
-
     pygame.mixer.init()
 
     self.BGM = ["sound/stage/stage_BGM.mp3",
@@ -71,16 +64,13 @@ class My_night(pygame.sprite.Sprite):
       pygame.image.load("image/my/night/night_throw.png")
     ]
     
-
     self.night_mucs = [
       pygame.mixer.Sound("sound/my/my_attck.mp3"),
       pygame.mixer.Sound("sound/my/my_hit.mp3"),
       pygame.mixer.Sound("sound/stage/gameover.wav"),
     ]
 
-
     self.image = self.night_imgs[0]
-
     self.sound = self.night_mucs[0]
     
     if globals.deaded == True:
@@ -182,7 +172,6 @@ class My_night(pygame.sprite.Sprite):
       self.rawrect.x = (self.rawrect.x // 40 + 1 ) * 40
 
 
-
   def jump(self):
       if self.on_ground:
         self.vy -= 18 
@@ -190,7 +179,7 @@ class My_night(pygame.sprite.Sprite):
 
   def attck(self):
     current_time = pygame.time.get_ticks()
-    if not self.attck_cooltime_bool:  # クールタイム中でない場合
+    if not self.attck_cooltime_bool:  # クールタイムじゃない時
             self.sound = self.night_mucs[0]
             self.sound.play()
             self.attck_cooltime_bool = True
@@ -198,28 +187,27 @@ class My_night(pygame.sprite.Sprite):
             self.attck_cooltime_start = current_time  # クールタイム開始時間を記録
             self.start_attck_time = current_time  # 攻撃開始時間を記録
 
-    # クールタイム解除処理
+    # クールタイム解除
     if self.attck_cooltime_bool:
-        attck_cooltime = (current_time - self.attck_cooltime_start) / 1000  # 経過時間（秒）
+        attck_cooltime = (current_time - self.attck_cooltime_start) / 1000
         if attck_cooltime >= 0.1:
             self.attck_cooltime_bool = False  # クールタイム終了
 
   def attck_bomb(self):
     current_time = pygame.time.get_ticks()
 
-    if not self.attck_cooltime_bool:  # クールタイム中でない場合
+    if not self.attck_cooltime_bool:
             self.sound = self.night_mucs[0]
             self.sound.play()
             self.attck_cooltime_bool = True
             self.attck_bool = True
-            self.attck_cooltime_start = current_time  # クールタイム開始時間を記録
-            self.start_attck_time = current_time  # 攻撃開始時間を記録
+            self.attck_cooltime_start = current_time  
+            self.start_attck_time = current_time
 
-    # クールタイム解除処理
     if self.attck_cooltime_bool:
-        attck_cooltime = (current_time - self.attck_cooltime_start) / 1000  # 経過時間（秒）
+        attck_cooltime = (current_time - self.attck_cooltime_start) / 1000
         if attck_cooltime >= 0.1:
-            self.attck_cooltime_bool = False  # クールタイム終了
+            self.attck_cooltime_bool = False
 
   def deading(self):
     pygame.mixer.music.stop()
@@ -279,16 +267,8 @@ class My_night(pygame.sprite.Sprite):
     
     self.damage = 0
     self.time_limit = time_limit
-    if self.time_limit <= 0 or self.deadflug == True:
+    if self.time_limit <= 0 or self.deadflug == True or self.rect.y >= 800:
       self.status = Status.DEADING
-
-
-
-
-    if self.rect.y >= 800:
-        self.status = Status.DEADING
-
-
 
     if self.status == Status.DEADING:
       self.deading()
@@ -305,7 +285,6 @@ class My_night(pygame.sprite.Sprite):
         globals.ending_true = False
         self.status = Status.END
 
-    # 移動処理
       if globals.score_dis == False:
         if self.line_move == True:
           if action[pygame.K_d]:
@@ -338,11 +317,8 @@ class My_night(pygame.sprite.Sprite):
               self.inter_se.play()
               globals.out_camp = True
               self.status = Status.ROED
-              
 
-            
         self.prev_h = action[pygame.K_h]
-
         if action[pygame.K_UP] and not self.prev_up:  
           if self.h_in == False:
             self.weapon_idx = 1 - self.weapon_idx
@@ -386,17 +362,9 @@ class My_night(pygame.sprite.Sprite):
               globals.hints_idx = 0
             self.cursor_SE.play()
         self.prev_down = action[pygame.K_DOWN]
-
-
-
         
-
-    # 重力処理
-
       self.vy += 1
       self.rawrect.y += self.vy
-    
-
       self.collision, self.line, self.sideline , self.now_tile = self.map.check_collision(self.rawrect)
       if self.collision == True and self.line == False and self.sideline == False :
           self.rawrect.y = (self.rawrect.y // 40 + (1 if self.vy < 0 else 0)) * 40
@@ -414,7 +382,6 @@ class My_night(pygame.sprite.Sprite):
         else:
               self.vy = -15
               self.line_move = False
-
 
       for bad in self.bad_group:
         if self.rawrect.colliderect(bad.rawrect):
@@ -469,7 +436,6 @@ class My_night(pygame.sprite.Sprite):
             self.invincible_start_time = pygame.time.get_ticks()
             self.sound = self.night_mucs[1]
             self.sound.play()
-
 
 
       for boss in self.boss_group:
@@ -553,25 +519,17 @@ class My_night(pygame.sprite.Sprite):
             self.sound = self.night_mucs[1]
             self.sound.play()
 
-
-
-
       if self.invincible:
         now = pygame.time.get_ticks()
         if now - self.invincible_start_time > self.invincible_duration:
           self.invincible = False
 
-
-    # 攻撃クールタイム処理
       if self.attck_bool:
           self.now_attck_time = pygame.time.get_ticks()
           self.throw_time = (self.now_attck_time - self.start_attck_time) / 1000
           if self.throw_time >= 0.05:
               self.attck_bool = False
 
-
-
-    # アニメーション処理
       if globals.score_dis == False:
         if not any(action) and self.on_ground:
           self.image = pygame.transform.flip(self.night_imgs[0], self.isleft, False)
@@ -590,7 +548,6 @@ class My_night(pygame.sprite.Sprite):
         self.image.set_alpha(255)
 
       self.rect = pygame.Rect(self.map.get_drawx(self.rawrect), self.rawrect.y, self.rawrect.width, self.rawrect.height)
-
       if self.rawrect.x >= 13650 and not self.boss_BGM and globals.deaded == False:
           pygame.mixer.music.stop() 
           pygame.mixer.music.load(self.BGM[1])

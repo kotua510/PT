@@ -1,11 +1,6 @@
 import pygame
-from enum import Enum, auto
-import time
-import math
-import random 
 from status import Status
 import globals
-
 
 pygame.init()
 
@@ -48,14 +43,9 @@ class Zombie(pygame.sprite.Sprite):
 
     if self.status == Status.NOMAL:
 
-
         self.scroll_x = self.map.scroll_x
-
         global enemy_kill
-
         self.sound.set_volume(1.0)
-        
-
         if self.rawrect.right > self.scroll_x - self.margin and self.rawrect.left < self.scroll_x + self.Width + self.margin:
             self.visible = True
         else:
@@ -65,13 +55,11 @@ class Zombie(pygame.sprite.Sprite):
             return  # 表示範囲外なら停止
 
         self.vy += 1
-        
         self.rect.x = self.rawrect.x - self.scroll_x
         self.rect.y = self.rawrect.y
         self.image = pygame.transform.flip(self.imgs[self.move_index[self.move_num % 10]], self.isleft, False)
         self.move_num += 1
         self.hitbox = self.rawrect.inflate(20, 0)
-
         self.rawrect.y += self.vy
         self.collision, self.line, self.sideline, self.now_tile = self.map.check_collision(self.rawrect)
         if self.collision or self.line or self.sideline:
@@ -96,14 +84,12 @@ class Zombie(pygame.sprite.Sprite):
                 self.vx = -self.vx
                 self.isleft = False
 
-
         for knife in knife_group:
             if self.rawrect.colliderect(knife.rawrect):
                 knife.kill()
                 self.sound.play()
                 if self.life > 0:
                     self.life -= (1 + globals.knife_plus + globals.treasure_knife)
-
                 if self.life <= 0:
                     globals.enemy_kill += self.score_up
                     self.kill()
@@ -113,9 +99,5 @@ class Zombie(pygame.sprite.Sprite):
                 globals.enemy_kill += self.score_up
                 self.kill()
 
-        # 画面外に出たら削除
-        if self.rect.x + self.margin <= 0:
+        if self.rect.x + self.margin <= 0 or self.rect.y >= 700:
             self.kill()
-
-        if self.rect.y >= 700:
-          self.kill()

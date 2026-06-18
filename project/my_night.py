@@ -147,11 +147,8 @@ class My_night(pygame.sprite.Sprite):
       self.isleft = False
       self.walk_index += 5
     self.collision, self.line, self.sideline ,self.now_tile = self.map.check_collision(self.rawrect)
-    if self.collision == True and self.sideline == True:
+    if self.collision == True:
         self.rawrect.x = (self.rawrect.x // 40 ) * 40
-        self.rawrect.x -= 5
-    elif self.collision == True and self.line == False and self.sideline == False :
-      self.rawrect.x = (self.rawrect.x // 40 ) * 40
 
 
   def left(self):
@@ -163,13 +160,10 @@ class My_night(pygame.sprite.Sprite):
     else:
       self.rawrect.x -= 5
       self.isleft = True
-      self.walk_index += 1
+      self.walk_index += 5
     self.collision, self.line, self.sideline , self.now_tile = self.map.check_collision(self.rawrect)
-    if self.collision == True and self.sideline == True:
+    if self.collision == True :
         self.rawrect.x = (self.rawrect.x // 40 + 1) * 40
-        self.rawrect.x += 5
-    elif self.collision == True and self.line == False and self.sideline == False :
-      self.rawrect.x = (self.rawrect.x // 40 + 1 ) * 40
 
 
   def jump(self):
